@@ -1,0 +1,15 @@
+[tool.poetry]
+name = "osu-web"
+version = "0.1.0"
+description = "Off Season Ultimate Website"
+authors = ["Jonathan Samuel <jonathansamuel2k@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+django = "^5.1.6"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
