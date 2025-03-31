@@ -25,10 +25,14 @@ SECRET_KEY = "django-insecure-emp@ir873-__pr@k2e9a2g%%*!a56)z1g&x#eez+%+p1k6)7b_
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS: list[str] = []
-
+ALLOWED_HOSTS = [
+    "127.0.0.1",
+    "localhost",
+]
 
 # Application definition
+
+AUTH_USER_MODEL = "osu.User"
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -37,6 +41,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "osu",
 ]
 
 MIDDLEWARE = [
@@ -121,3 +126,5 @@ STATIC_URL = "static/"
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+FRONTEND_SERVER_PORT = 3000
