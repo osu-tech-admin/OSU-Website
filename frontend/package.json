@@ -21,6 +21,76 @@
   },
   "devDependencies": {
     "vite": "^6.2.0",
-    "vite-plugin-solid": "^2.11.2"
+    "vite-plugin-solid": "^2.11.2",
+    "eslint": "^8.46.0",
+    "eslint-plugin-simple-import-sort": "^10.0.0",
+    "eslint-plugin-solid": "^0.12.1",
+    "eslint-plugin-unused-imports": "^3.0.0",
+    "prettier": "^3.0.0",
+    "prettier-plugin-tailwindcss": "^0.5.7"
+  },
+  "prettier": {
+    "trailingComma": "none",
+    "tabWidth": 2,
+    "arrowParens": "avoid",
+    "plugins": [
+      "./node_modules/prettier-plugin-tailwindcss/dist/index.mjs"
+    ]
+  },
+  "eslintConfig": {
+    "env": {
+      "browser": true,
+      "es2021": true,
+      "node": true
+    },
+    "plugins": [
+      "solid",
+      "unused-imports",
+      "simple-import-sort"
+    ],
+    "extends": [
+      "eslint:recommended",
+      "plugin:solid/recommended"
+    ],
+    "parserOptions": {
+      "ecmaVersion": "latest",
+      "sourceType": "module"
+    },
+    "rules": {
+      "quotes": [
+        "error",
+        "double"
+      ],
+      "comma-dangle": [
+        "error",
+        "never"
+      ],
+      "arrow-parens": [
+        "error",
+        "as-needed"
+      ],
+      "no-irregular-whitespace": [
+        "error",
+        {
+          "skipJSXText": true
+        }
+      ],
+      "unused-imports/no-unused-imports": "error",
+      "no-unused-vars": [
+        "error",
+        {
+          "vars": "all",
+          "args": "after-used",
+          "ignoreRestSiblings": false,
+          "varsIgnorePattern": "^_"
+        }
+      ],
+      "simple-import-sort/imports": "error",
+      "simple-import-sort/exports": "error"
+    },
+    "ignorePatterns": [
+      "dist/*",
+      "*.config.js"
+    ]
   }
 }

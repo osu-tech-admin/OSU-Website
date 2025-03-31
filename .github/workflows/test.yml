@@ -1,0 +1,165 @@
+---
+name: CI Tests
+
+on:
+  workflow_dispatch:
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: "yarn"
+          cache-dependency-path: frontend/yarn.lock
+
+      - name: Install dependencies
+        working-directory: "./frontend"
+        run: yarn install --production=false
+
+      - name: Install poetry
+        run: pipx install poetry==1.8.4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
+          cache: "poetry"
+
+      - name: Install Python dependencies
+        run: poetry install --no-root --with=dev
+
+      - name: Run linters
+        run: poetry run ./scripts/lint
+
+      - name: Ensure requirements.txt and pyproject.toml
+        run: |
+          poetry export --without-hashes -o requirements.txt
+          git diff --exit-code
+
+      - name: Ensure pyproject.toml and poetry.lock are in sync
+        run: |
+          poetry check
+
+      - name: Ensure models and migrations are in sync
+        run: |
+          poetry run python manage.py makemigrations --noinput --check --dry-run
+
+  # run-django-tests:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v3
+
+  #     - name: Install poetry
+  #       run: pipx install poetry
+
+  #     - name: Set up Python
+  #       uses: actions/setup-python@v4
+  #       with:
+  #         python-version: "3.10"
+  #         cache: "poetry"
+
+  #     - name: Install dependencies
+  #       run: poetry install --no-root --with=dev
+
+  #     - name: Run Django unit tests
+  #       env:
+  #         TOPSCORE_CLIENT_ID: "fake-client-id"
+  #         TOPSCORE_CLIENT_SECRET: "fake-client-secret"
+  #         TOPSCORE_SITE_SLUG: "upai"
+  #       run: |
+  #         poetry run pytest --disable-warnings -k 'not Integration'
+
+  # run-integration-tests:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v3
+
+  #     - name: Install poetry
+  #       run: pipx install poetry
+
+  #     - name: Set up Python
+  #       uses: actions/setup-python@v4
+  #       with:
+  #         python-version: "3.10"
+  #         cache: "poetry"
+
+  #     - name: Install dependencies
+  #       run: poetry install --no-root --with=dev
+
+  #     - name: Set up Node
+  #       uses: actions/setup-node@v3
+  #       with:
+  #         # webpack dev server proxy doesn't work with Node 18!
+  #         node-version: 16
+  #         cache: "yarn"
+  #         cache-dependency-path: frontend/yarn.lock
+
+  #     - name: Install node dependencies (webpack-dev-server)
+  #       working-directory: "./frontend"
+  #       run: yarn install --production=false
+
+  #     - name: Install geckodriver (for integration tests)
+  #       run: poetry run sbase get geckodriver latest
+
+  #     - name: Run Django Integration tests
+  #       env:
+  #         PHONEPE_SALT_INDEX: 1
+  #         PHONEPE_SALT_KEY: ${{ secrets.PHONEPE_SALT_KEY }}
+  #         PHONEPE_MERCHANT_ID: ${{ secrets.PHONEPE_MERCHANT_ID }}
+  #         RAZORPAY_KEY_ID: ${{ secrets.RAZORPAY_KEY_ID }}
+  #         RAZORPAY_KEY_SECRET: ${{ secrets.RAZORPAY_KEY_SECRET }}
+  #         RAZORPAY_WEBHOOK_SECRET: ${{ secrets.RAZORPAY_WEBHOOK_SECRET }}
+  #       run: |
+  #         poetry run pytest --disable-warnings -k Integration --firefox
+
+  #     - name: Upload selenium base logs as artifacts
+  #       if: failure() # Upload the artifact even if a previous step fails
+  #       uses: actions/upload-artifact@v4
+  #       with:
+  #         name: sbase-logs-${{ matrix.runs-on }}
+  #         path: latest_logs/
+  #         retention-days: 1
+
+  frontend-build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: "yarn"
+          cache-dependency-path: frontend/yarn.lock
+
+      - name: Install dependencies
+        working-directory: "./frontend"
+        run: yarn install --production=false
+
+      - name: Run Build
+        working-directory: "./frontend"
+        run: yarn build
+
+  # docker_image_test:
+  #   name: Build docker image to ensure everything works
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Checkout code
+  #       uses: actions/checkout@v3
+  #     - uses: whoan/docker-build-with-cache-action@v5
+  #       with:
+  #         image_name: india-ultimate/hub
+  #         push_image_and_stages: false
+  #     - name: Run the migrations
+  #       run: docker run india-ultimate/hub:latest python manage.py migrate
+  #     - name: Run the deploy checks
+  #       run: docker run --env OTP_EMAIL_HASH_KEY=test india-ultimate/hub:latest python manage.py check --deploy
