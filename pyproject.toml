@@ -4,12 +4,109 @@ version = "0.1.0"
 description = "Off Season Ultimate Website"
 authors = ["Jonathan Samuel <jonathansamuel2k@gmail.com>"]
 readme = "README.md"
+package-mode = false
 
 [tool.poetry.dependencies]
 python = "^3.11"
 django = "^5.1.6"
 
+[tool.poetry.group.dev.dependencies]
+black = "^23.3.0"
+ruff = "^0.0.282"
+mypy = "^1.4.1"
+django-stubs = "^4.2.3"
+zulint = {git = "https://github.com/zulip/zulint.git"}
+gitlint = "^0.19.1"
 
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.black]
+line-length = 100
+
+[tool.ruff]
+line-length = 100
+# Allow autofix for all enabled rules (when `--fix`) is provided.
+fixable = ["ALL"]
+# https://beta.ruff.rs/docs/rules/#tryceratops-try
+select = [
+    "ANN", # annotations
+    "B", # bugbear
+    "C4", # comprehensions
+    "COM", # trailing comma
+    "DJ", # Django
+    "DTZ", # naive datetime
+    "E", # style errors
+    "EXE", # shebang
+    "F", # flakes
+    "FLY", # string formatting
+    "G", # logging format
+    "I", # import sorting
+    "INT", # gettext
+    "ISC", # string concatenation
+    "N", # naming
+    "PGH", # pygrep-hooks
+    "PIE", # miscellaneous
+    "PL", # pylint
+    "PYI", # typing stubs
+    "Q", # quotes
+    "RSE", # raise
+    "RUF", # Ruff
+    "S", # security
+    "SIM", # simplify
+    "T10", # debugger
+    "UP", # upgrade
+    "W", # style warnings
+    "YTT", # sys.version
+]
+ignore = [
+    "ANN101", # Missing type annotation for `self` in method
+    "ANN102", # Missing type annotation for `cls` in classmethod
+    "ANN401", # Dynamically typed expressions (typing.Any) are disallowed
+    "COM812", # Trailing comma missing
+    "DJ001", # Avoid using `null=True` on string-based fields
+    "DJ008", # Model does not define `__str__` method
+    "E402", # Module level import not at top of file
+    "E501", # Line too long
+    "PLR0915", # Too many statements
+    "PLR0911", # Too many return statements
+    "PLR0912", # Too many branches
+    "PLR0913", # Too many arguments
+    "RUF012", # Mutable class attributes should be annotated with `typing.ClassVar`
+    "S105", # Possible hardcoded password
+]
+
+[tool.mypy]
+scripts_are_modules = true
+show_traceback = true
+
+# Enable strict mode, with some exceptions.
+strict = true
+disallow_subclassing_any = false
+disallow_untyped_calls = false
+disallow_untyped_decorators = false
+warn_return_any = false
+
+# Enable optional errors.
+enable_error_code = [
+    "redundant-expr",
+    "truthy-bool",
+    "ignore-without-code",
+    "unused-awaitable",
+]
+
+# Display the codes needed for # type: ignore[code] annotations.
+show_error_codes = true
+
+# Warn of unreachable or redundant code.
+warn_unreachable = true
+
+# To suppress all missing import errors for all untyped libraries
+ignore_missing_imports = true
+
+
+plugins = ["mypy_django_plugin.main"]
+
+[tool.django-stubs]
+django_settings_module = "backend.settings"
