@@ -2,7 +2,7 @@
 
 set -euo pipefail
 
-GIT_SOURCE=https://github.com/india-ultimate/hub
+GIT_SOURCE=https://github.com/osu-tech-admin/OSU-Website
 REF_PATH=refs/heads/main
 BASE=$(git ls-remote ${GIT_SOURCE} ${REF_PATH} | awk -F' ' '{print $1}')
 
