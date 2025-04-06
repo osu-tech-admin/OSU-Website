@@ -53,30 +53,30 @@ jobs:
         run: |
           poetry run python manage.py makemigrations --noinput --check --dry-run
 
-  # run-django-tests:
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - uses: actions/checkout@v3
+  run-django-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
 
-  #     - name: Install poetry
-  #       run: pipx install poetry
+      - name: Install poetry
+        run: pipx install poetry
 
-  #     - name: Set up Python
-  #       uses: actions/setup-python@v4
-  #       with:
-  #         python-version: "3.10"
-  #         cache: "poetry"
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
+          cache: "poetry"
 
-  #     - name: Install dependencies
-  #       run: poetry install --no-root --with=dev
+      - name: Install dependencies
+        run: poetry install --no-root --with=dev
 
-  #     - name: Run Django unit tests
-  #       env:
-  #         TOPSCORE_CLIENT_ID: "fake-client-id"
-  #         TOPSCORE_CLIENT_SECRET: "fake-client-secret"
-  #         TOPSCORE_SITE_SLUG: "upai"
-  #       run: |
-  #         poetry run pytest --disable-warnings -k 'not Integration'
+      - name: Run Django unit tests
+        env:
+          OTP_EMAIL_HASH_KEY: "your-otp-email-hash-key"
+          EMAIL_HOST_USER: "your-email@gmail.com"
+          EMAIL_HOST_PASSWORD: "your-app-password"
+        run: |
+          poetry run pytest --disable-warnings
 
   # run-integration-tests:
   #   runs-on: ubuntu-latest

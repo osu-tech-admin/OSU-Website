@@ -11,6 +11,9 @@ python = "^3.11"
 django = "^5.1.6"
 django-ninja = "^1.4.0"
 python-dotenv = "^1.0.1"
+pyotp = "^2.9.0"
+pytest = "^8.3.5"
+pytest-django = "^4.11.1"
 
 [tool.poetry.group.dev.dependencies]
 black = "^23.3.0"
@@ -23,6 +26,9 @@ gitlint = "^0.19.1"
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.pytest.ini_options]
+DJANGO_SETTINGS_MODULE = "backend.test_settings"
 
 [tool.black]
 line-length = 100
