@@ -10,9 +10,9 @@ class AuthenticatedHttpRequest(HttpRequest):
 
 class Response(Schema):
     message: str
-    description: str | None
-    action_name: str | None
-    action_href: str | None
+    description: str | None = None
+    action_name: str | None = None
+    action_href: str | None = None
 
 
 message_response = dict[str, str]
