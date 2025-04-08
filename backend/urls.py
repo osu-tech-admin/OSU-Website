@@ -15,9 +15,19 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
+from django.http import HttpRequest, JsonResponse
 from django.urls import include, path
+from django.views.decorators.csrf import ensure_csrf_cookie
+
+
+# Simple view to provide the CSRF token
+@ensure_csrf_cookie
+def csrf_token_view(request: HttpRequest) -> JsonResponse:
+    return JsonResponse({"detail": "CSRF cookie set"})
+
 
 urlpatterns = [
     path("", include("osu.urls")),
     path("admin/", admin.site.urls),
+    path("api/csrf/", csrf_token_view, name="csrf_token"),
 ]
