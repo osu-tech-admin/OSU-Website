@@ -8,5 +8,17 @@ export default defineConfig({
     alias: {
       "~": path.resolve(__dirname, "./src")
     }
+  },
+  server: {
+    port: 3000,
+    strictPort: true,
+    proxy: {
+      // Proxy API requests to Django backend
+      "/api": {
+        target: "http://localhost:8000",
+        changeOrigin: true,
+        secure: false
+      }
+    }
   }
 });

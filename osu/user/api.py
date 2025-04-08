@@ -24,6 +24,18 @@ from .utils import get_email_hash
 
 router = Router()
 
+# User info #########
+
+
+@router.get("/me", response={200: UserSchema, 401: Response})
+def get_current_user(request: AuthenticatedHttpRequest) -> tuple[int, User | message_response]:
+    """
+    Get the currently logged in user's information.
+    Returns 401 if the user is not authenticated.
+    """
+    return 200, request.user
+
+
 # Login #########
 
 
@@ -37,8 +49,8 @@ def api_login(
     if user is not None:
         login(request, user)
         return 200, user
-    else:
-        return 403, {"message": "Invalid credentials"}
+
+    return 403, {"message": "Invalid credentials"}
 
 
 @router.post("/logout", response={200: Response})
