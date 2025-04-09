@@ -1,6 +1,7 @@
 import { createSignal, Show } from "solid-js";
 import { createMutation } from "@tanstack/solid-query";
 import { loginWithPassword } from "../../services/authService";
+import { Button } from "../ui/button";
 
 export default function PasswordLogin() {
   const [email, setEmail] = createSignal("");
@@ -78,14 +79,14 @@ export default function PasswordLogin() {
           <div class="text-sm font-medium text-destructive">{error()}</div>
         </Show>
 
-        <button
+        <Button
           type="submit"
-          class="w-full rounded-md bg-primary py-2 font-medium text-primary-foreground 
-                 hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-primary"
+          variant="default"
+          class="w-full"
           disabled={loginMutation.isLoading}
         >
           {loginMutation.isLoading ? "Signing in..." : "Sign in"}
-        </button>
+        </Button>
       </form>
     </div>
   );

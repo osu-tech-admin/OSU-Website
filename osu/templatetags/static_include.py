@@ -11,6 +11,11 @@ register = template.Library()
 @register.simple_tag
 @mark_safe
 def static_include(filename: str) -> str:
+    file_path = settings.STATIC_ROOT.joinpath(filename + "")
+    if file_path.exists():
+        with open(file_path) as f:
+            return f.read()
+
     manifest_path = settings.STATIC_ROOT.joinpath("manifest.json")
     if manifest_path.exists():
         with manifest_path.open() as f:

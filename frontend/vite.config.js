@@ -12,12 +12,12 @@ export default defineConfig({
   base: process.env.NODE_ENV === "production" ? "/static/" : "/",
   build: {
     manifest: "manifest.json",
-    outDir: path.resolve(__dirname, "dist"),
-    rollupOptions: {
-      input: {
-        index: "./src/index.jsx"
-      }
-    }
+    outDir: path.resolve(__dirname, "dist")
+    // rollupOptions: {
+    //   input: {
+    //     index: "./src/index.jsx"
+    //   }
+    // }
   },
   server: {
     port: 3000,

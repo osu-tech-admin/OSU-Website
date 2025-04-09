@@ -9,6 +9,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@corvu/otp-field": "^0.1.4",
+    "@kobalte/core": "^0.13.9",
     "@solidjs/router": "^0.13.1",
     "@tanstack/solid-query": "^5.71.10",
     "autoprefixer": "^10.4.21",
