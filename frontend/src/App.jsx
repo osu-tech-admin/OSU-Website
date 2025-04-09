@@ -6,10 +6,12 @@ import Login from "./pages/Login";
 import "./App.css";
 import { ErrorBoundary } from "solid-js";
 import AuthenticatedRoute from "./components/auth/AuthenticatedRoute";
+import Layout from "./components/Layout";
+
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <Router>
+      <Router root={Layout}>
         <Route path="/" component={Home} />
         <Route path="/login" component={Login} />
         {/* Authenticated routes */}
