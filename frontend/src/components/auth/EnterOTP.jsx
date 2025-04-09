@@ -1,5 +1,5 @@
 import { createSignal, Show } from "solid-js";
-import { createMutation } from "@tanstack/solid-query";
+import { createMutation, useQueryClient } from "@tanstack/solid-query";
 import { loginWithOTP } from "../../services/authService";
 import { Button } from "../ui/button";
 import {
@@ -13,6 +13,7 @@ import {
 export default function EnterOTP({ email, otpTimestamp, onBack }) {
   const [otp, setOtp] = createSignal("");
   const [error, setError] = createSignal("");
+  const queryClient = useQueryClient();
 
   // Create mutation for OTP login
   const otpLoginMutation = createMutation(() => ({
@@ -25,6 +26,7 @@ export default function EnterOTP({ email, otpTimestamp, onBack }) {
     },
     onSuccess: () => {
       // Redirect or update UI based on successful login
+      queryClient.invalidateQueries({ queryKey: ["me"] });
       window.location.href = "/dashboard";
     }
   }));
