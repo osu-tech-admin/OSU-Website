@@ -63,6 +63,15 @@ export default function Header() {
             MUL '25
           </A>
         </NavigationMenuItem>
+        <NavigationMenuItem>
+          <A
+            href="/players"
+            class="text-lg font-semibold transition-colors hover:text-primary"
+            onClick={onClick}
+          >
+            Players
+          </A>
+        </NavigationMenuItem>
         <Show when={props.mobile}>
           <NavigationMenuItem>
             <A
