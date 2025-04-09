@@ -1,7 +1,7 @@
 FROM python:3.11
 
 RUN apt-get update \
-    && apt-get install --no-install-recommends --assume-yes nginx yarnpkg sudo cron htop tmux nano\
+    && apt-get install --no-install-recommends --assume-yes nginx yarnpkg sudo cron htop tmux nano gcc libpq-dev build-essential python3-wheel\
     && rm -r /var/lib/apt/lists /var/cache/apt
 
 # Create a user
@@ -16,6 +16,9 @@ WORKDIR $APP
 
 # Install Python dependencies
 COPY --chown=user:users requirements.txt $APP/requirements.txt
+RUN pip install --upgrade pip
+RUN pip install --upgrade setuptools
+RUN pip install wheel
 RUN pip install -r requirements.txt
 COPY --chown=user:users README.md .
 

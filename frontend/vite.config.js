@@ -9,7 +9,7 @@ export default defineConfig({
       "~": path.resolve(__dirname, "./src")
     }
   },
-  base: "/static/",
+  base: process.env.NODE_ENV === "production" ? "/static/" : "/",
   build: {
     manifest: "manifest.json",
     outDir: path.resolve(__dirname, "dist"),
