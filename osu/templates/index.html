@@ -1,1 +1,2 @@
-{% csrf_token %} {% load static_include %} {% static_include 'index.html' %}
+{% csrf_token %} {% load django_vite %} {% vite_asset 'src/index.jsx' %}
+<div id="root"></div>

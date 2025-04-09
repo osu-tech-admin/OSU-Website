@@ -9,6 +9,16 @@ export default defineConfig({
       "~": path.resolve(__dirname, "./src")
     }
   },
+  base: "/static/",
+  build: {
+    manifest: "manifest.json",
+    outDir: path.resolve(__dirname, "dist"),
+    rollupOptions: {
+      input: {
+        index: "./src/index.jsx"
+      }
+    }
+  },
   server: {
     port: 3000,
     strictPort: true,
