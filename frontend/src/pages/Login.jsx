@@ -2,6 +2,7 @@ import { createSignal, Match, Switch } from "solid-js";
 import PasswordLogin from "../components/auth/PasswordLogin";
 import OTPLogin from "../components/auth/OTPLogin";
 import EnterOTP from "../components/auth/EnterOTP";
+import { Button } from "../components/ui/button";
 
 export default function Login() {
   const [activeTab, setActiveTab] = createSignal("password"); // "password" or "otp"
@@ -40,8 +41,9 @@ export default function Login() {
 
           <div class="mb-6">
             <div class="flex border-b border-border">
-              <button
-                class={`flex-1 py-2 text-center font-medium ${
+              <Button
+                variant={activeTab() === "password" ? "link" : "ghost"}
+                class={`flex-1 ${
                   activeTab() === "password"
                     ? "border-b-2 border-primary text-primary"
                     : "text-muted-foreground hover:text-foreground"
@@ -49,9 +51,10 @@ export default function Login() {
                 onClick={() => setActiveTab("password")}
               >
                 Password
-              </button>
-              <button
-                class={`flex-1 py-2 text-center font-medium ${
+              </Button>
+              <Button
+                variant={activeTab() === "otp" ? "link" : "ghost"}
+                class={`flex-1 ${
                   activeTab() === "otp"
                     ? "border-b-2 border-primary text-primary"
                     : "text-muted-foreground hover:text-foreground"
@@ -59,7 +62,7 @@ export default function Login() {
                 onClick={() => setActiveTab("otp")}
               >
                 Email OTP
-              </button>
+              </Button>
             </div>
           </div>
 

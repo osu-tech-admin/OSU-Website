@@ -1,6 +1,14 @@
 import { createSignal, Show } from "solid-js";
 import { createMutation } from "@tanstack/solid-query";
 import { loginWithOTP } from "../../services/authService";
+import { Button } from "../ui/button";
+import {
+  OTPField,
+  OTPFieldGroup,
+  OTPFieldInput,
+  OTPFieldSlot,
+  REGEXP_ONLY_DIGITS
+} from "../ui/otp-field";
 
 export default function EnterOTP({ email, otpTimestamp, onBack }) {
   const [otp, setOtp] = createSignal("");
@@ -49,41 +57,38 @@ export default function EnterOTP({ email, otpTimestamp, onBack }) {
           >
             Verification Code
           </label>
-          <input
-            id="otp-code"
-            type="text"
-            inputmode="numeric"
-            pattern="[0-9]*"
-            maxlength="6"
+          <OTPField
             value={otp()}
-            onInput={e => setOtp(e.target.value.replace(/[^0-9]/g, ""))}
-            class="w-full rounded-md border border-input px-3 py-2 text-center text-xl tracking-wider focus:outline-none focus:ring-2 focus:ring-primary"
-            placeholder="000000"
-            required
-          />
+            onValueChange={setOtp}
+            pattern={REGEXP_ONLY_DIGITS}
+            length={6}
+            class="mt-2"
+          >
+            <OTPFieldInput id="otp-code" />
+            <OTPFieldGroup class="w-full justify-center">
+              {Array.from({ length: 6 }).map((_, i) => (
+                <OTPFieldSlot index={i} />
+              ))}
+            </OTPFieldGroup>
+          </OTPField>
         </div>
 
         <Show when={error()}>
           <div class="text-sm font-medium text-destructive">{error()}</div>
         </Show>
 
-        <button
+        <Button
           type="submit"
-          class="w-full rounded-md bg-primary py-2 font-medium text-primary-foreground 
-                 hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-primary"
+          variant="default"
+          class="w-full"
           disabled={otpLoginMutation.isLoading}
         >
           {otpLoginMutation.isLoading ? "Verifying..." : "Verify Code"}
-        </button>
+        </Button>
 
-        <button
-          type="button"
-          class="w-full rounded-md bg-transparent py-2 font-medium text-foreground 
-                 hover:bg-secondary/80 focus:outline-none focus:ring-2 focus:ring-secondary"
-          onClick={onBack}
-        >
+        <Button type="button" variant="outline" class="w-full" onClick={onBack}>
           Back
-        </button>
+        </Button>
       </form>
     </div>
   );

@@ -1,4 +1,5 @@
 import osuLogo from "../assets/osu_logo.png";
+import { Button } from "../components/ui/button";
 
 export default function Home() {
   return (
@@ -21,18 +22,20 @@ export default function Home() {
           </p>
 
           <div class="flex w-full max-w-md flex-col justify-center gap-4 sm:flex-row">
-            <a
-              href="/login"
-              class="rounded-md bg-primary px-6 py-3 font-medium text-primary-foreground transition-colors hover:bg-primary/90"
+            <Button
+              variant="default"
+              class="w-full"
+              onClick={() => (window.location.href = "/login")}
             >
               Sign In
-            </a>
-            <a
-              href="/signup"
-              class="rounded-md bg-secondary px-6 py-3 font-medium text-secondary-foreground transition-colors hover:bg-secondary/90"
+            </Button>
+            <Button
+              variant="secondary"
+              class="w-full"
+              onClick={() => (window.location.href = "/signup")}
             >
               Join Now
-            </a>
+            </Button>
           </div>
         </div>
       </section>
