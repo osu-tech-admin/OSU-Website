@@ -7,6 +7,8 @@ import "./App.css";
 import { ErrorBoundary } from "solid-js";
 import AuthenticatedRoute from "./components/auth/AuthenticatedRoute";
 import Layout from "./components/Layout";
+import PlayersList from "./pages/PlayersList";
+import PlayerDetail from "./pages/PlayerDetail";
 
 function App() {
   return (
@@ -14,6 +16,8 @@ function App() {
       <Router root={Layout}>
         <Route path="/" component={Home} />
         <Route path="/login" component={Login} />
+        <Route path="/players" component={PlayersList} />
+        <Route path="/players/:slug" component={PlayerDetail} />
         {/* Authenticated routes */}
         <AuthenticatedRoute path="/dashboard" component={Home} />
       </Router>
