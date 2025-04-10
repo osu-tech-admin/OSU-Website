@@ -38,7 +38,7 @@ class PlayerListSchema(Schema):
     slug: str | None = None
     profile_picture: str | None = None
     gender: str
-    city: str
+    preffered_role: str
 
     @staticmethod
     def resolve_name(player: Player) -> str:

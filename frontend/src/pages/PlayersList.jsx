@@ -17,28 +17,26 @@ const roleOptions = [
   { value: "H", label: "Handler" }
 ];
 
-const sortOptions = [
-  { value: "name", label: "Name" },
-  { value: "gender", label: "Gender" },
-  { value: "city", label: "City" },
-  { value: "role", label: "Role" }
-];
-
 export default function PlayersList() {
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
 
-  // Get filter values from URL or defaults
+  // Get filter values from URL or defaults for form inputs
+  const [searchInput, setSearchInput] = createSignal(searchParams.search || "");
+  const [genderInput, setGenderInput] = createSignal(searchParams.gender || "");
+  const [roleInput, setRoleInput] = createSignal(searchParams.role || "");
+
+  // Values that will be used for actual filtering (applied only when button is clicked)
   const [search, setSearch] = createSignal(searchParams.search || "");
   const [gender, setGender] = createSignal(searchParams.gender || "");
   const [role, setRole] = createSignal(searchParams.role || "");
-  const [sort, setSort] = createSignal(searchParams.sort || "name");
-  const [order, setOrder] = createSignal(searchParams.order || "asc");
+  const [sort, setSort] = createSignal("name");
+  const [order, setOrder] = createSignal("asc");
   const [page, setPage] = createSignal(parseInt(searchParams.page || "1", 10));
 
   const ITEMS_PER_PAGE = 20;
 
-  // Update query parameters when filters change
+  // Update query parameters when applied filter values change
   createEffect(() => {
     setSearchParams({
       search: search(),
@@ -50,7 +48,7 @@ export default function PlayersList() {
     });
   });
 
-  // Fetch players data
+  // Fetch players data with the applied filters
   const playersQuery = useQuery(() => ({
     queryKey: ["players", search(), gender(), role(), sort(), order(), page()],
     queryFn: () =>
@@ -65,9 +63,13 @@ export default function PlayersList() {
       })
   }));
 
-  // Handle form submission
+  // Handle form submission - apply filters
   const handleSubmit = event => {
     event.preventDefault();
+    // Apply the input values to the actual filter values
+    setSearch(searchInput());
+    setGender(genderInput());
+    setRole(roleInput());
     setPage(1); // Reset to first page when filters change
   };
 
@@ -76,20 +78,15 @@ export default function PlayersList() {
     navigate(`/players/${slug}`);
   };
 
-  // Toggle sort order
-  const toggleSortOrder = () => {
-    setOrder(order() === "asc" ? "desc" : "asc");
-  };
-
   return (
     <div class="container mx-auto py-8">
-      <h1 class="mb-8 text-3xl font-bold">Players Directory</h1>
+      <h1 class="mb-8 text-3xl font-bold">Players</h1>
 
       {/* Search and Filters */}
       <form onSubmit={handleSubmit} class="mb-8">
-        <div class="grid grid-cols-1 gap-4 md:grid-cols-5">
+        <div class="grid grid-cols-1 gap-4 md:grid-cols-3">
           {/* Search */}
-          <div class="md:col-span-2">
+          <div class="md:col-span-1">
             <label
               for="search"
               class="block text-sm font-medium text-muted-foreground"
@@ -100,8 +97,8 @@ export default function PlayersList() {
               type="text"
               id="search"
               placeholder="Search by name..."
-              value={search()}
-              onInput={e => setSearch(e.target.value)}
+              value={searchInput()}
+              onInput={e => setSearchInput(e.target.value)}
               class="mt-1 w-full rounded-md border border-input bg-background px-3 py-2 text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
             />
           </div>
@@ -116,8 +113,8 @@ export default function PlayersList() {
             </label>
             <select
               id="gender"
-              value={gender()}
-              onChange={e => setGender(e.target.value)}
+              value={genderInput()}
+              onChange={e => setGenderInput(e.target.value)}
               class="mt-1 w-full rounded-md border border-input bg-background px-3 py-2 text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
             >
               <For each={genderOptions}>
@@ -136,75 +133,14 @@ export default function PlayersList() {
             </label>
             <select
               id="role"
-              value={role()}
-              onChange={e => setRole(e.target.value)}
+              value={roleInput()}
+              onChange={e => setRoleInput(e.target.value)}
               class="mt-1 w-full rounded-md border border-input bg-background px-3 py-2 text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
             >
               <For each={roleOptions}>
                 {option => <option value={option.value}>{option.label}</option>}
               </For>
             </select>
-          </div>
-
-          {/* Sort By */}
-          <div>
-            <label
-              for="sort"
-              class="block text-sm font-medium text-muted-foreground"
-            >
-              Sort By
-            </label>
-            <div class="mt-1 flex">
-              <select
-                id="sort"
-                value={sort()}
-                onChange={e => setSort(e.target.value)}
-                class="w-full rounded-l-md border border-input bg-background px-3 py-2 text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
-              >
-                <For each={sortOptions}>
-                  {option => (
-                    <option value={option.value}>{option.label}</option>
-                  )}
-                </For>
-              </select>
-              <button
-                type="button"
-                onClick={toggleSortOrder}
-                class="flex items-center justify-center rounded-r-md border border-l-0 border-input bg-background px-3 focus:outline-none"
-              >
-                {order() === "asc" ? (
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    class="h-4 w-4"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M5 15l7-7 7 7"
-                    />
-                  </svg>
-                ) : (
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    class="h-4 w-4"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M19 9l-7 7-7-7"
-                    />
-                  </svg>
-                )}
-              </button>
-            </div>
           </div>
         </div>
 
@@ -256,27 +192,42 @@ export default function PlayersList() {
                         </div>
                       )}
                     </div>
-                    <div class="p-4">
-                      <h3 class="font-semibold">{player.name}</h3>
-                      <div class="mt-2 flex flex-wrap gap-2">
-                        <span class="inline-flex items-center rounded-full bg-primary/10 px-2 py-1 text-xs font-medium text-primary">
+                    <div class="flex flex-row items-center justify-between p-4">
+                      <h3 class="flex-grow text-lg font-semibold">
+                        {player.name}
+                      </h3>
+                      <div class="flex flex-wrap gap-2">
+                        <span
+                          class={`inline-flex items-center rounded-full px-2 py-1 text-sm font-medium ${
+                            player.gender === "M"
+                              ? "bg-blue-100 text-blue-800"
+                              : player.gender === "F"
+                                ? "bg-pink-100 text-pink-800"
+                                : "bg-purple-100 text-purple-800"
+                          }`}
+                        >
                           {player.gender === "M"
                             ? "Male"
                             : player.gender === "F"
                               ? "Female"
                               : "Other"}
                         </span>
-                        {player.preffered_role && (
-                          <span class="inline-flex items-center rounded-full bg-secondary/20 px-2 py-1 text-xs font-medium text-secondary-foreground">
-                            {player.preffered_role === "C"
-                              ? "Cutter"
-                              : "Handler"}
-                          </span>
-                        )}
+                        <span
+                          class={`inline-flex items-center rounded-full px-2 py-1 text-sm font-medium ${
+                            player.preffered_role === "C"
+                              ? "bg-green-100 text-green-800"
+                              : player.preffered_role === "H"
+                                ? "bg-amber-100 text-amber-800"
+                                : "bg-gray-100 text-gray-800"
+                          }`}
+                        >
+                          {player.preffered_role === "C"
+                            ? "Cutter"
+                            : player.preffered_role === "H"
+                              ? "Handler"
+                              : "No Role"}
+                        </span>
                       </div>
-                      <p class="mt-2 text-sm text-muted-foreground">
-                        {player.city}
-                      </p>
                     </div>
                   </div>
                 )}
