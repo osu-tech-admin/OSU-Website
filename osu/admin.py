@@ -4,8 +4,17 @@ from django.db.models import CharField, Q, QuerySet, Value
 from django.db.models.functions import Concat
 from django.http import HttpRequest
 
+from osu.match.models import Match
 from osu.player.models import Player
 from osu.team.models import Team
+from osu.tournament.models import (
+    Bracket,
+    CrossPool,
+    Pool,
+    PositionPool,
+    Tournament,
+    TournamentField,
+)
 from osu.user.models import User
 
 
@@ -115,3 +124,70 @@ class TeamAdmin(admin.ModelAdmin[Team]):
 
     def get_admin_display_value(self, obj: Team) -> str:
         return str(obj)
+
+
+@admin.register(Tournament)
+class TournamentAdmin(admin.ModelAdmin[Tournament]):
+    search_fields = ["name"]
+    list_display = ["name"]
+    filter_horizontal = ("volunteers", "teams")
+
+
+@admin.register(TournamentField)
+class TournamentFieldAdmin(admin.ModelAdmin[TournamentField]):
+    search_fields = ["tournament__name"]
+    list_display = ["get_name", "name"]
+
+    @admin.display(description="Tournament Name", ordering="tournament__name")
+    def get_name(self, obj: TournamentField) -> str:
+        return obj.tournament.name
+
+
+@admin.register(Pool)
+class PoolAdmin(admin.ModelAdmin[Pool]):
+    search_fields = ["tournament__name"]
+    list_display = ["get_name", "name"]
+
+    @admin.display(description="Tournament Name", ordering="tournament__name")
+    def get_name(self, obj: Pool) -> str:
+        return obj.tournament.name
+
+
+@admin.register(Bracket)
+class BracketAdmin(admin.ModelAdmin[Bracket]):
+    search_fields = ["tournament__name"]
+    list_display = ["get_name", "name"]
+
+    @admin.display(description="Tournament Name", ordering="tournament__name")
+    def get_name(self, obj: Pool) -> str:
+        return obj.tournament.name
+
+
+@admin.register(CrossPool)
+class CrossPoolAdmin(admin.ModelAdmin[CrossPool]):
+    search_fields = ["tournament__name"]
+    list_display = ["get_name"]
+
+    @admin.display(description="Tournament Name", ordering="tournament__name")
+    def get_name(self, obj: Pool) -> str:
+        return obj.tournament.name
+
+
+@admin.register(PositionPool)
+class PositionPoolAdmin(admin.ModelAdmin[PositionPool]):
+    search_fields = ["tournament__name"]
+    list_display = ["get_name", "name"]
+
+    @admin.display(description="Tournament Name", ordering="tournament__name")
+    def get_name(self, obj: Pool) -> str:
+        return obj.tournament.name
+
+
+@admin.register(Match)
+class MatchAdmin(admin.ModelAdmin[Match]):
+    search_fields = ["tournament__name"]
+    list_display = ["get_name", "name"]
+
+    @admin.display(description="Tournament Name", ordering="tournament__name")
+    def get_name(self, obj: Match) -> str:
+        return obj.tournament.name
