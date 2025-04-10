@@ -6,6 +6,7 @@ colorama==0.4.6 ; python_version >= "3.11" and python_version < "4.0" and sys_pl
 dj-database-url==2.3.0 ; python_version >= "3.11" and python_version < "4.0"
 django-cors-headers==4.7.0 ; python_version >= "3.11" and python_version < "4.0"
 django-ninja==1.4.0 ; python_version >= "3.11" and python_version < "4.0"
+django-stubs-ext==5.1.3 ; python_version >= "3.11" and python_version < "4.0"
 django-vite==3.1.0 ; python_version >= "3.11" and python_version < "4.0"
 django==5.2 ; python_version >= "3.11" and python_version < "4.0"
 gunicorn==23.0.0 ; python_version >= "3.11" and python_version < "4.0"

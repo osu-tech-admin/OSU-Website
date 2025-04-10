@@ -79,20 +79,38 @@ export default function PlayerDetail() {
               </h1>
 
               <div class="mb-6 flex flex-wrap gap-2">
-                <span class="inline-flex items-center rounded-full bg-primary/10 px-2.5 py-0.5 text-sm font-medium text-primary">
+                <span
+                  class={`inline-flex items-center rounded-full px-2.5 py-0.5 text-sm font-medium ${
+                    playerQuery.data.gender === "M"
+                      ? "bg-blue-100 text-blue-800"
+                      : playerQuery.data.gender === "F"
+                        ? "bg-pink-100 text-pink-800"
+                        : "bg-purple-100 text-purple-800"
+                  }`}
+                >
                   {playerQuery.data.gender === "M"
                     ? "Male"
                     : playerQuery.data.gender === "F"
                       ? "Female"
                       : "Other"}
                 </span>
-                {playerQuery.data.preffered_role && (
-                  <span class="inline-flex items-center rounded-full bg-secondary/20 px-2.5 py-0.5 text-sm font-medium text-secondary-foreground">
-                    {playerQuery.data.preffered_role === "C"
-                      ? "Cutter"
-                      : "Handler"}
-                  </span>
-                )}
+
+                {/* Role Badge */}
+                <span
+                  class={`inline-flex items-center rounded-full px-2.5 py-0.5 text-sm font-medium ${
+                    playerQuery.data.preffered_role === "C"
+                      ? "bg-green-100 text-green-800"
+                      : playerQuery.data.preffered_role === "H"
+                        ? "bg-amber-100 text-amber-800"
+                        : "bg-gray-100 text-gray-800"
+                  }`}
+                >
+                  {playerQuery.data.preffered_role === "C"
+                    ? "Cutter"
+                    : "Handler"}
+                </span>
+
+                {/* Throwing Hand Badge */}
                 {playerQuery.data.throwing_hand && (
                   <span class="inline-flex items-center rounded-full bg-muted px-2.5 py-0.5 text-sm font-medium text-muted-foreground">
                     {playerQuery.data.throwing_hand === "L"
@@ -103,26 +121,6 @@ export default function PlayerDetail() {
               </div>
 
               <div class="space-y-4">
-                <div>
-                  <h2 class="text-xl font-semibold">Contact Information</h2>
-                  <div class="mt-2 rounded-lg border border-border p-4">
-                    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                      <div>
-                        <p class="text-sm text-muted-foreground">Email</p>
-                        <p>{playerQuery.data.user.email}</p>
-                      </div>
-                      <div>
-                        <p class="text-sm text-muted-foreground">Phone</p>
-                        <p>{playerQuery.data.user.phone || "Not provided"}</p>
-                      </div>
-                      <div>
-                        <p class="text-sm text-muted-foreground">City</p>
-                        <p>{playerQuery.data.city}</p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
                 <div>
                   <h2 class="text-xl font-semibold">Player Details</h2>
                   <div class="mt-2 rounded-lg border border-border p-4">
@@ -159,18 +157,6 @@ export default function PlayerDetail() {
                             : playerQuery.data.match_up === "F"
                               ? "Female matching"
                               : "Not specified"}
-                        </p>
-                      </div>
-                      <div>
-                        <p class="text-sm text-muted-foreground">
-                          Date of Birth
-                        </p>
-                        <p>
-                          {playerQuery.data.date_of_birth
-                            ? new Date(
-                                playerQuery.data.date_of_birth
-                              ).toLocaleDateString()
-                            : "Not provided"}
                         </p>
                       </div>
                     </div>
