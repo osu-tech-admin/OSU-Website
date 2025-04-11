@@ -96,7 +96,11 @@ def get_tournament(
         tournament = Tournament.objects.get(slug=slug)
         return 200, tournament
     except Tournament.DoesNotExist:
-        return 404, {"success": False, "message": f"Tournament with slug {slug} not found"}
+        try:
+            tournament = Tournament.objects.get(id=slug)
+            return 200, tournament
+        except Tournament.DoesNotExist:
+            return 404, {"success": False, "message": f"Tournament with id/slug {slug} not found"}
 
 
 @router.post(

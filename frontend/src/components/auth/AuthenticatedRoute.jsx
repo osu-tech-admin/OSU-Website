@@ -26,7 +26,7 @@ export default function AuthenticatedRoute(props) {
       }
     >
       <Suspense fallback={<div>Loading...</div>}>
-        <Route {...props} data={userQuery.data} />
+        <Route {...props} component={() => <props.component user={userQuery.data} />} />
       </Suspense>
     </ErrorBoundary>
   );

@@ -9,7 +9,7 @@ import AuthenticatedRoute from "./components/auth/AuthenticatedRoute";
 import Layout from "./components/Layout";
 import PlayersList from "./pages/PlayersList";
 import PlayerDetail from "./pages/PlayerDetail";
-
+import TournamentManager from "./pages/TournamentManager";
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
@@ -19,7 +19,7 @@ function App() {
         <Route path="/players" component={PlayersList} />
         <Route path="/players/:slug" component={PlayerDetail} />
         {/* Authenticated routes */}
-        <AuthenticatedRoute path="/dashboard" component={Home} />
+        <AuthenticatedRoute path="/tournament-manager" component={TournamentManager} />
       </Router>
     </QueryClientProvider>
   );
