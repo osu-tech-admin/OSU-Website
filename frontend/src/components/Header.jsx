@@ -56,7 +56,7 @@ export default function Header() {
         </NavigationMenuItem>
         <NavigationMenuItem>
           <A
-            href="/tournaments"
+            href="/tournament/mul-25"
             class="text-lg font-semibold transition-colors hover:text-primary"
             onClick={onClick}
           >
