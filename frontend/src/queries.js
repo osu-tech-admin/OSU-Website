@@ -67,6 +67,15 @@ export const fetchTournament = async tournamentId => {
 };
 
 /**
+ * Fetch tournament by slug
+ * @param {string} tournamentSlug - Tourrnament slug
+ * @returns {Promise<Object>} - Tournament data
+ */
+export const fetchTournamentBySlug = async tournamentSlug => {
+  return apiRequest(`/api/tournaments/${tournamentSlug}`, "GET");
+};
+
+/**
  * Fetch fields by tournament ID
  * @param {number} tournamentId - Tournament ID
  * @returns {Promise<Array>} - List of fields
