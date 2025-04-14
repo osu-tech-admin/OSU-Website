@@ -31,15 +31,11 @@ SECRET_KEY = "django-insecure-emp@ir873-__pr@k2e9a2g%%*!a56)z1g&x#eez+%+p1k6)7b_
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = [
-    "127.0.0.1",
-    "localhost",
-    "osu-web.fly.dev",
-]
+ALLOWED_HOSTS = ["127.0.0.1", "localhost", "osu-web.fly.dev", os.getenv("PRIVATE_IP")]
 
 # Frontend settings
 FRONTEND_SERVER_PORT = 3000
-FRONTEND_URL = f"http://localhost:{FRONTEND_SERVER_PORT}"
+FRONTEND_URL = f"http://{os.getenv('PRIVATE_IP', 'localhost')}:{FRONTEND_SERVER_PORT}"
 
 # Application definition
 
