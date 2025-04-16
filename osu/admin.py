@@ -12,6 +12,7 @@ from osu.tournament.models import (
     CrossPool,
     Pool,
     PositionPool,
+    Registration,
     Tournament,
     TournamentField,
 )
@@ -191,3 +192,27 @@ class MatchAdmin(admin.ModelAdmin[Match]):
     @admin.display(description="Tournament Name", ordering="tournament__name")
     def get_name(self, obj: Match) -> str:
         return obj.tournament.name
+
+
+@admin.register(Registration)
+class RegistrationAdmin(admin.ModelAdmin[Registration]):
+    search_fields = [
+        "tournament__name",
+        "player__user__first_name",
+        "player__user__last_name",
+        "player__user__username",
+        "team__name",
+    ]
+    list_display = ["get_player_name", "get_team_name", "get_tournament_name"]
+
+    @admin.display(description="Tournament Name", ordering="tournament__name")
+    def get_tournament_name(self, obj: Registration) -> str:
+        return obj.tournament.name
+
+    @admin.display(description="Player Name", ordering="player__user__first_name")
+    def get_player_name(self, obj: Registration) -> str:
+        return obj.player.user.get_full_name()
+
+    @admin.display(description="Team Name", ordering="team__name")
+    def get_team_name(self, obj: Registration) -> str:
+        return obj.team.name
