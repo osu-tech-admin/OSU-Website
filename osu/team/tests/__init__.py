@@ -1,1 +1,0 @@
-# Team API tests package

@@ -471,14 +471,6 @@ def staff_submit_match_score(
         with transaction.atomic():
             match = get_object_or_404(Match, id=match_id)
 
-            try:
-                Player.objects.get(user=request.user)
-            except Player.DoesNotExist:
-                return 400, {
-                    "success": False,
-                    "message": "Staff member does not have a player record",
-                }
-
             update_match_score_and_results(match, payload.score_team_1, payload.score_team_2)
             populate_fixtures(match.tournament.id)
 
