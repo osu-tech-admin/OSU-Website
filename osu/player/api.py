@@ -51,6 +51,13 @@ def list_players(
         )
     )
 
+    # Prefetch registrations and related tournament and team data
+    queryset = queryset.prefetch_related(
+        "registration_set",
+        "registration_set__tournament",
+        "registration_set__team",
+    )
+
     # Apply filters
     if search:
         # Search in first name, last name, and full name
@@ -104,7 +111,17 @@ def get_player_by_slug(request: HttpRequest, slug: str) -> tuple[int, Player | d
         slug: The slug of the player to retrieve
     """
     try:
-        player = Player.objects.select_related("user").get(slug=slug)
+        # Include prefetched registration data
+        player = (
+            Player.objects.select_related("user")
+            .prefetch_related(
+                "registration_set",
+                "registration_set__tournament",
+                "registration_set__team",
+            )
+            .get(slug=slug)
+        )
+
         return 200, player
     except Player.DoesNotExist:
         return 404, {"message": f"Player with slug '{slug}' not found"}
