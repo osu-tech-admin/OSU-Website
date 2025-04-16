@@ -1,4 +1,5 @@
 import osuLogo from "../assets/osu_logo.png";
+import mulLogo from "../assets/mul_logo.png";
 import { Button } from "../components/ui/button";
 
 export default function Home() {
@@ -10,152 +11,108 @@ export default function Home() {
           <img
             src={osuLogo}
             alt="Off Season Ultimate Logo"
-            class="mb-8 h-32 w-auto"
+            class="mb-8 h-32 w-auto scale-150"
           />
-          <h1 class="mb-6 text-4xl font-bold text-foreground md:text-5xl">
+          {/* <h1 class="mb-6 text-4xl font-bold text-foreground md:text-5xl text-blue-950">
             Off Season Ultimate
-          </h1>
+          </h1> */}
           <p class="mx-auto mb-8 max-w-2xl text-lg text-muted-foreground md:text-xl">
-            Join the ultimate frisbee community and stay connected during the
-            off-season. Play pickup games, track your stats, and connect with
-            other players.
+            There’s no off-season when off-season ultimate is here 😎 Play
+            tournaments, track your stats, connect with other players, and be
+            part of the OSU family 👊🏽
           </p>
 
           <div class="flex w-full max-w-md flex-col justify-center gap-4 sm:flex-row">
             <Button
               variant="default"
-              class="w-full"
+              class="w-full bg-blue-950"
               onClick={() => (window.location.href = "/login")}
             >
               Sign In
-            </Button>
-            <Button
-              variant="secondary"
-              class="w-full"
-              onClick={() => (window.location.href = "/signup")}
-            >
-              Join Now
             </Button>
           </div>
         </div>
       </section>
 
       {/* Features Section */}
-      <section class="bg-muted/50 py-16">
-        <div class="container mx-auto px-4">
-          <h2 class="mb-12 text-center text-3xl font-bold">Why Join OSU?</h2>
-          <div class="grid grid-cols-1 gap-8 md:grid-cols-3">
-            <div class="rounded-lg bg-card p-6 shadow-sm">
-              <div class="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-primary/10">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  class="h-6 w-6 text-primary"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
-                  />
-                </svg>
+      <section class="bg-blue-950 px-4 py-8">
+        <div class="container mx-auto">
+          {/* <h2 class="mb-4 text-center text-3xl font-bold">Featured Leagues</h2> */}
+          <div class="flex flex-col items-center">
+            <div class="max-w-xl rounded-lg bg-card p-8 shadow-sm">
+              <div class="flex justify-end">
+                <div class="flex w-fit items-center gap-2 rounded-full bg-orange-500 px-4 py-1 text-sm font-semibold text-white">
+                  <span class="relative flex size-3">
+                    <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-white opacity-75"></span>
+                    <span class="relative inline-flex size-3 rounded-full bg-white"></span>
+                  </span>
+                  <span>Season 5</span>
+                </div>
               </div>
-              <h3 class="mb-2 text-xl font-semibold">Community</h3>
-              <p class="text-muted-foreground">
-                Connect with other ultimate frisbee players in your area and
-                build lasting friendships.
-              </p>
-            </div>
+              <div class="flex flex-col items-center gap-6 md:flex-row">
+                <div class="flex-shrink-0">
+                  {/* Replace the src with the actual path to mul_logo once it's imported */}
+                  <img
+                    src={mulLogo}
+                    alt="Mumbai Ultimate League Logo"
+                    class="h-36 w-auto scale-150"
+                  />
+                </div>
+                <div class="text-left">
+                  {/* <h3 class="mb-2 text-2xl font-bold text-blue-950">
+                    Mumbai Ultimate League
+                  </h3> */}
 
-            <div class="rounded-lg bg-card p-6 shadow-sm">
-              <div class="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-primary/10">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  class="h-6 w-6 text-primary"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
-                  />
-                </svg>
+                  <p class="my-2 text-muted-foreground">
+                    Join Mumbai's premier ultimate frisbee league featuring the
+                    city's top players and teams.
+                  </p>
+                  <Button
+                    class="bg-blue-950"
+                    onClick={() => (window.location.href = "/leagues/mul")}
+                  >
+                    View League
+                  </Button>
+                </div>
               </div>
-              <h3 class="mb-2 text-xl font-semibold">Game Tracking</h3>
-              <p class="text-muted-foreground">
-                Organize and join pickup games, track your stats, and improve
-                your skills.
-              </p>
-            </div>
-
-            <div class="rounded-lg bg-card p-6 shadow-sm">
-              <div class="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-primary/10">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  class="h-6 w-6 text-primary"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M13 10V3L4 14h7v7l9-11h-7z"
-                  />
-                </svg>
-              </div>
-              <h3 class="mb-2 text-xl font-semibold">Stay Active</h3>
-              <p class="text-muted-foreground">
-                Keep playing even in the off-season with regular events and
-                training opportunities.
-              </p>
             </div>
           </div>
         </div>
-      </section>
 
-      {/* Testimonials Section */}
-      <section class="py-16">
-        <div class="container mx-auto px-4">
-          <h2 class="mb-12 text-center text-3xl font-bold">What Players Say</h2>
-          <div class="grid grid-cols-1 gap-8 md:grid-cols-2">
-            <div class="rounded-lg border border-border bg-card p-6 shadow-sm">
-              <p class="mb-4 italic text-muted-foreground">
-                "OSU has completely changed how I experience the off-season.
-                Instead of waiting for tournaments, I'm playing and improving
-                all year round!"
-              </p>
-              <div class="flex items-center">
-                <div class="mr-3 flex h-10 w-10 items-center justify-center rounded-full bg-primary/20">
-                  <span class="font-semibold text-primary">JD</span>
+        <div class="container mx-auto px-4 mt-8">
+          {/* <h2 class="mb-12 text-center text-3xl font-bold">Features</h2> */}
+          <div class="grid grid-cols-1 gap-8 md:grid-cols-3">
+            <div class="rounded-lg bg-card p-6 shadow-sm">
+              <div class="mb-4 flex items-center gap-4">
+                <div class="flex h-12 w-12 items-center justify-center rounded-full bg-blue-950">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-6 w-6 text-white"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
+                    />
+                  </svg>
                 </div>
-                <div>
-                  <h4 class="font-semibold">Jamie Doe</h4>
-                  <p class="text-sm text-muted-foreground">Seattle, WA</p>
-                </div>
+                <h3 class="text-xl font-semibold text-blue-950">Player Profiles</h3>
               </div>
-            </div>
 
-            <div class="rounded-lg border border-border bg-card p-6 shadow-sm">
-              <p class="mb-4 italic text-muted-foreground">
-                "I've met so many amazing players through OSU. The community is
-                supportive, and the pickup games are always a blast!"
+              <p class="mb-4 text-muted-foreground">
+                View all our amazing player profiles with their latest stats.
               </p>
-              <div class="flex items-center">
-                <div class="mr-3 flex h-10 w-10 items-center justify-center rounded-full bg-primary/20">
-                  <span class="font-semibold text-primary">AS</span>
-                </div>
-                <div>
-                  <h4 class="font-semibold">Alex Smith</h4>
-                  <p class="text-sm text-muted-foreground">Portland, OR</p>
-                </div>
-              </div>
+              <Button
+                variant="default"
+                class="bg-blue-950"
+                onClick={() => (window.location.href = "/players")}
+              >
+                Browse Players
+              </Button>
             </div>
           </div>
         </div>

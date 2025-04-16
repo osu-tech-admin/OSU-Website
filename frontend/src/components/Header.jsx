@@ -9,7 +9,7 @@ import {
   NavigationMenuContent,
   NavigationMenuIcon
 } from "./ui/navigation-menu";
-import osuLogo from "../assets/osu_logo.png";
+import osuLogo from "../assets/osu_logo_white.png";
 import { logout } from "../services/authService";
 import { useQuery, useQueryClient } from "@tanstack/solid-query";
 
@@ -88,7 +88,7 @@ export default function Header() {
   };
 
   return (
-    <header class="sticky top-0 z-50 w-full border-b border-border bg-background/95 backdrop-blur">
+    <header class="sticky top-0 z-50 w-full border-b border-border bg-blue-950 text-white backdrop-blur">
       <div class="container flex h-16 items-center justify-between px-4 md:px-6">
         {/* Logo */}
         <A href="/" class="flex items-center space-x-2">
@@ -109,7 +109,7 @@ export default function Header() {
             when={userQuery.isSuccess}
             fallback={
               <A href="/login">
-                <Button variant="default" size="lg" class="text-md">
+                <Button variant="default" size="lg" class="text-md bg-white text-blue-950">
                   Sign In
                 </Button>
               </A>
@@ -117,7 +117,7 @@ export default function Header() {
           >
             <div class="flex items-center space-x-2">
               <A href="/dashboard">
-                <Button variant="default" size="lg" class="text-md"> 
+                <Button variant="default" size="lg" class="text-md bg-white text-blue-950"> 
                   My Account
                 </Button>
               </A>
@@ -131,7 +131,7 @@ export default function Header() {
             when={userQuery.isSuccess}
             fallback={
               <A href="/login" class="mr-2">
-                <Button variant="default" size="sm">
+                <Button variant="default" size="sm" class="bg-white text-blue-950">
                   Sign In
                 </Button>
               </A>
