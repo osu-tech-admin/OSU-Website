@@ -117,6 +117,8 @@ class Registration(models.Model):
     team = models.ForeignKey(Team, on_delete=models.CASCADE)
     player = models.ForeignKey(Player, on_delete=models.CASCADE)
     role = models.CharField(max_length=6, choices=Role.choices, default=Role.DEFAULT)
+    base_price = models.PositiveIntegerField(null=True, blank=True)
+    sold_price = models.PositiveIntegerField(null=True, blank=True)
 
     class Meta:
         unique_together = ("tournament", "player")
