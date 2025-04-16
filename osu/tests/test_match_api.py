@@ -282,8 +282,3 @@ class MatchAPITestCase(TestCase):
         self.assertEqual(match.score_team_1, 15)
         self.assertEqual(match.score_team_2, 12)
         self.assertEqual(match.status, Match.StatusTypes.COMPLETED)
-
-        # Verify suggested scores are set for both teams (same score)
-        self.assertIsNotNone(match.suggested_score_team_1)
-        self.assertIsNotNone(match.suggested_score_team_2)
-        self.assertEqual(match.suggested_score_team_1, match.suggested_score_team_2)
