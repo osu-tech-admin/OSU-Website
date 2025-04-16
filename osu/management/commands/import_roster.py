@@ -29,6 +29,9 @@ class Command(BaseCommand):
             "AB": "Afterburners",
             "BR": "Bombay Rhinos",
             "DD": "Dancing Dragons",
+            "RF": "Reborn Fire",
+            "DH": "Desi Hawks",
+            "BB": "Bombai Bantais",
             # Add more team mappings as needed
         }
 
