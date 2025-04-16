@@ -1,6 +1,6 @@
 import { useParams, useNavigate } from "@solidjs/router";
 import { useQuery } from "@tanstack/solid-query";
-import { Show, Suspense, createSignal, createEffect } from "solid-js";
+import { Show, Suspense, createSignal, createEffect, For } from "solid-js";
 import { getPlayerBySlug } from "../services/playerService";
 import { Button } from "../components/ui/button";
 
@@ -22,8 +22,26 @@ export default function PlayerDetail() {
     navigate("/players");
   };
 
+  // Function to render role badge based on role code
+  const getRoleBadge = role => {
+    switch (role) {
+      case "DFLT":
+        return "Player";
+      case "CAP":
+        return "Captain";
+      case "SCAP":
+        return "Spirit Captain";
+      case "COACH":
+        return "Coach";
+      case "OWNER":
+        return "Owner";
+      default:
+        return "Player";
+    }
+  };
+
   return (
-    <div class="container mx-auto py-8">
+    <div class="mx-auto w-full px-8 py-8">
       <Button variant="outline" onClick={goBackToList} class="mb-6">
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -120,7 +138,7 @@ export default function PlayerDetail() {
                 )}
               </div>
 
-              <div class="space-y-4">
+              <div class="space-y-6">
                 <div>
                   <h2 class="text-xl font-semibold">Player Details</h2>
                   <div class="mt-2 rounded-lg border border-border p-4">
@@ -162,6 +180,102 @@ export default function PlayerDetail() {
                     </div>
                   </div>
                 </div>
+
+                {/* Registrations Section */}
+                <Show
+                  when={
+                    playerQuery.data.registrations &&
+                    playerQuery.data.registrations.length > 0
+                  }
+                >
+                  <div>
+                    <h2 class="text-xl font-semibold text-blue-950">
+                      Participated Tournaments
+                    </h2>
+                    <div class="mt-2 space-y-4">
+                      <For each={playerQuery.data.registrations}>
+                        {registration => (
+                          <div class="overflow-hidden rounded-lg border border-blue-950 bg-blue-950 text-white shadow-sm">
+                            {/* Tournament Banner */}
+                            <div class="relative h-28 w-full overflow-hidden bg-gray-100">
+                              {registration.tournament.banner ? (
+                                <img
+                                  src={registration.tournament.banner}
+                                  alt={registration.tournament.name}
+                                  class="h-full w-full object-cover"
+                                />
+                              ) : (
+                                <div class="flex h-full w-full items-center justify-center bg-blue-950/20 text-center">
+                                  <span class="font-medium text-muted-foreground">
+                                    {registration.tournament.name}
+                                  </span>
+                                </div>
+                              )}
+                              {/* Tournament Name Overlay */}
+                              <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-3">
+                                <h3 class="text-lg font-bold text-white">
+                                  {registration.tournament.name}
+                                </h3>
+                              </div>
+                            </div>
+                            <div class="p-4">
+                              {/* Team Info */}
+                              <div class="flex items-center gap-3">
+                                <div class="flex-shrink-0">
+                                  {registration.team.logo ? (
+                                    <img
+                                      src={registration.team.logo}
+                                      alt={registration.team.name}
+                                      class="h-10 w-10 rounded-full border border-gray-200 object-cover"
+                                    />
+                                  ) : (
+                                    <div class="flex h-10 w-10 items-center justify-center rounded-full bg-blue-950 text-sm font-bold text-white">
+                                      {registration.team.name.charAt(0)}
+                                    </div>
+                                  )}
+                                </div>
+                                <div>
+                                  <p class="font-semibold">
+                                    {registration.team.name}
+                                  </p>
+                                  <p class="text-sm text-muted-foreground">
+                                    <span class="inline-flex items-center rounded-full bg-blue-100 px-2 py-0.5 text-xs font-medium text-blue-800">
+                                      {getRoleBadge(registration.role)}
+                                    </span>
+                                  </p>
+                                </div>
+                              </div>
+
+                              {/* Price Info */}
+                              <div class="mt-4 grid grid-cols-2 gap-2 border-t border-gray-100 pt-4">
+                                <div>
+                                  <p class="text-xs text-blue-100">
+                                    Base Price
+                                  </p>
+                                  <p class="text-lg font-medium">
+                                    {registration.base_price
+                                      ? `₹${registration.base_price}`
+                                      : "N/A"}
+                                  </p>
+                                </div>
+                                <div class="text-right">
+                                  <p class="text-xs text-blue-100">
+                                    Sold Price
+                                  </p>
+                                  <p class="text-lg font-medium text-green-600">
+                                    {registration.sold_price
+                                      ? `₹${registration.sold_price}`
+                                      : "N/A"}
+                                  </p>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        )}
+                      </For>
+                    </div>
+                  </div>
+                </Show>
               </div>
             </div>
           </div>

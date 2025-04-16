@@ -78,9 +78,16 @@ export default function PlayersList() {
     navigate(`/players/${slug}`);
   };
 
+  // Function to get most recent registration
+  const getLatestRegistration = registrations => {
+    if (!registrations || registrations.length === 0) return null;
+    // Could sort by tournament date if available, but for now just return the first one
+    return registrations[0];
+  };
+
   return (
-    <div class="container mx-auto py-8">
-      <h1 class="mb-8 text-3xl font-bold">Players</h1>
+    <div class="mx-auto w-auto px-8 py-8">
+      <h1 class="mb-8 text-3xl font-bold text-blue-950">Players</h1>
 
       {/* Search and Filters */}
       <form onSubmit={handleSubmit} class="mb-8">
@@ -145,7 +152,11 @@ export default function PlayersList() {
         </div>
 
         <div class="mt-4">
-          <Button type="submit" variant="default">
+          <Button
+            type="submit"
+            variant="default"
+            class="bg-blue-950 text-white hover:bg-blue-950/90"
+          >
             Apply Filters
           </Button>
         </div>
@@ -169,68 +180,101 @@ export default function PlayersList() {
           >
             <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
               <For each={playersQuery.data?.players}>
-                {player => (
-                  <div
-                    class="cursor-pointer overflow-hidden rounded-lg border border-border bg-card shadow-sm transition-all hover:shadow-md"
-                    onClick={() => viewPlayer(player.slug)}
-                  >
-                    <div class="aspect-square overflow-hidden bg-muted">
-                      {player.profile_picture ? (
-                        <img
-                          src={player.profile_picture}
-                          alt={player.name}
-                          class="h-full w-full object-cover"
-                        />
-                      ) : (
-                        <div class="flex h-full w-full items-center justify-center bg-primary/10">
-                          <span class="text-4xl font-semibold text-primary">
-                            {player.name
-                              .split(" ")
-                              .map(n => n[0])
-                              .join("")}
-                          </span>
-                        </div>
-                      )}
-                    </div>
-                    <div class="flex flex-row items-center justify-between p-4">
-                      <h3 class="flex-grow text-lg font-semibold">
-                        {player.name}
-                      </h3>
-                      <div class="flex flex-wrap gap-2">
-                        <span
-                          class={`inline-flex items-center rounded-full px-2 py-1 text-sm font-medium ${
-                            player.gender === "M"
-                              ? "bg-blue-100 text-blue-800"
+                {player => {
+                  const latestReg = getLatestRegistration(player.registrations);
+                  return (
+                    <div
+                      class="cursor-pointer overflow-hidden rounded-lg border border-blue-950 bg-blue-950 text-white shadow-sm transition-all hover:shadow-md"
+                      onClick={() => viewPlayer(player.slug)}
+                    >
+                      <div class="aspect-square overflow-hidden bg-muted">
+                        {player.profile_picture ? (
+                          <img
+                            src={player.profile_picture}
+                            alt={player.name}
+                            class="h-full w-full object-cover"
+                          />
+                        ) : (
+                          <div class="flex h-full w-full items-center justify-center bg-primary/10">
+                            <span class="text-4xl font-semibold text-primary">
+                              {player.name
+                                .split(" ")
+                                .map(n => n[0])
+                                .join("")}
+                            </span>
+                          </div>
+                        )}
+                      </div>
+                      <div class="flex flex-col space-y-3 p-4">
+                        <div class="flex items-center justify-between">
+                          <h3 class="text-lg font-semibold">{player.name}</h3>
+                          <div class="flex flex-wrap gap-2">
+                            <span
+                            class={`inline-flex items-center rounded-full px-2 py-1 text-sm font-medium ${
+                              player.gender === "M"
+                                ? "bg-blue-100 text-blue-800"
+                                : player.gender === "F"
+                                  ? "bg-pink-100 text-pink-800"
+                                  : "bg-purple-100 text-purple-800"
+                            }`}
+                          >
+                            {player.gender === "M"
+                              ? "Male"
                               : player.gender === "F"
-                                ? "bg-pink-100 text-pink-800"
-                                : "bg-purple-100 text-purple-800"
-                          }`}
-                        >
-                          {player.gender === "M"
-                            ? "Male"
-                            : player.gender === "F"
-                              ? "Female"
-                              : "Other"}
-                        </span>
-                        <span
-                          class={`inline-flex items-center rounded-full px-2 py-1 text-sm font-medium ${
-                            player.preffered_role === "C"
-                              ? "bg-green-100 text-green-800"
+                                ? "Female"
+                                : "Other"}
+                          </span>
+                          <span
+                            class={`inline-flex items-center rounded-full px-2 py-1 text-sm font-medium ${
+                              player.preffered_role === "C"
+                                ? "bg-green-100 text-green-800"
+                                : player.preffered_role === "H"
+                                  ? "bg-amber-100 text-amber-800"
+                                  : "bg-gray-100 text-gray-800"
+                            }`}
+                          >
+                            {player.preffered_role === "C"
+                              ? "Cutter"
                               : player.preffered_role === "H"
-                                ? "bg-amber-100 text-amber-800"
-                                : "bg-gray-100 text-gray-800"
-                          }`}
-                        >
-                          {player.preffered_role === "C"
-                            ? "Cutter"
-                            : player.preffered_role === "H"
-                              ? "Handler"
-                              : "No Role"}
-                        </span>
+                                ? "Handler"
+                                : "No Role"}
+                            </span>
+                          </div>
+                        </div>
+
+                        {/* Registration Info */}
+                        <Show when={latestReg}>
+                          <div class="mt-2 border-t border-blue-900 pt-3">
+                            <div class="flex items-center gap-2">
+                              {latestReg.team.logo ? (
+                                <img
+                                  src={latestReg.team.logo}
+                                  alt={latestReg.team.name}
+                                  class="h-6 w-6 rounded-full object-cover"
+                                />
+                              ) : (
+                                <div class="flex h-6 w-6 items-center justify-center rounded-full bg-blue-800 text-xs font-bold">
+                                  {latestReg.team.name.charAt(0)}
+                                </div>
+                              )}
+                              <span class="font-medium">
+                                {latestReg.team.name}
+                              </span>
+                            </div>
+                            <div class="mt-1 flex items-center justify-between text-sm text-blue-200">
+                              <span>{latestReg.tournament.name}</span>
+                              <Show when={latestReg.sold_price}>
+                                <span class="font-semibold text-blue-100">
+                                  ₹{latestReg.sold_price}
+                                </span>
+                              </Show>
+                            </div>
+                          </div>
+                        </Show>
                       </div>
                     </div>
-                  </div>
-                )}
+                  );
+                }}
               </For>
             </div>
 
