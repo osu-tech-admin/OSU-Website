@@ -126,7 +126,11 @@ export const fetchPositionPools = async tournamentId => {
  * @returns {Promise<Array>} - List of matches
  */
 export const fetchMatches = async tournamentId => {
-  return apiRequest(`/api/tournaments/${tournamentId}/matches`, "GET");
+  return apiRequest(`/api/matches?tournament_id=${tournamentId}`, "GET");
+};
+
+export const fetchUserPermissionsForMatch = async tournamentSlug => {
+  return apiRequest(`/api/tournaments/${tournamentSlug}/me/access`, "GET");
 };
 
 /**

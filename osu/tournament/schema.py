@@ -5,7 +5,15 @@ from ninja import ModelSchema, Schema
 
 from osu.player.models import Player
 from osu.team.models import Team
-from osu.tournament.models import Bracket, CrossPool, Pool, PositionPool, Registration, Tournament
+from osu.tournament.models import (
+    Bracket,
+    CrossPool,
+    Pool,
+    PositionPool,
+    Registration,
+    Tournament,
+    TournamentField,
+)
 from osu.user.models import User
 
 
@@ -38,6 +46,13 @@ class UserSimpleSchema(ModelSchema):
         model_fields = ["id", "first_name", "last_name", "email"]
 
 
+class UserAccessSchema(Schema):
+    # is_staff: bool
+    # is_tournament_admin: bool
+    admin_team_ids: list[int]
+    # is_tournament_volunteer: bool
+
+
 class TournamentSimpleSchema(ModelSchema):
     class Config:
         model = Tournament
@@ -52,6 +67,12 @@ class TournamentSimpleSchema(ModelSchema):
             "type",
             "banner",
         ]
+
+
+class TournamentFieldSchema(ModelSchema):
+    class Config:
+        model = TournamentField
+        model_exclude = ["tournament"]
 
 
 class RegistrationSchema(ModelSchema):

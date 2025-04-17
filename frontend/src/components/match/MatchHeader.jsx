@@ -58,7 +58,7 @@ const MatchName = props => (
   </Show>
 );
 
-const MatchCard = props => {
+const MatchHeader = props => {
   const [color, setColor] = createSignal("blue");
 
   createEffect(() => {
@@ -184,4 +184,4 @@ const MatchCard = props => {
   );
 };
 
-export default MatchCard;
+export default MatchHeader;

@@ -9,7 +9,15 @@ from ninja.pagination import PageNumberPagination, paginate
 from osu.match.models import Match
 from osu.player.models import Player
 from osu.team.models import Team
-from osu.tournament.models import Bracket, CrossPool, Pool, PositionPool, Registration, Tournament
+from osu.tournament.models import (
+    Bracket,
+    CrossPool,
+    Pool,
+    PositionPool,
+    Registration,
+    Tournament,
+    TournamentField,
+)
 from osu.tournament.schema import (
     BracketCreateSchema,
     BracketSchema,
@@ -30,8 +38,10 @@ from osu.tournament.schema import (
     SuccessSchema,
     TournamentCreateSchema,
     TournamentDetailSchema,
+    TournamentFieldSchema,
     TournamentSimpleSchema,
     TournamentUpdateSchema,
+    UserAccessSchema,
 )
 from osu.tournament.utils import (
     create_bracket_matches,
@@ -101,6 +111,42 @@ def get_tournament(
             return 200, tournament
         except Tournament.DoesNotExist:
             return 404, {"success": False, "message": f"Tournament with id/slug {slug} not found"}
+
+
+@router.get(
+    "/{slug}/me/access", response={200: UserAccessSchema, 404: ErrorSchema}, tags=["tournaments"]
+)
+def get_user_access_for_tournament(
+    request: AuthenticatedHttpRequest, slug: str
+) -> tuple[int, dict[str, Any]]:
+    try:
+        tournament = Tournament.objects.get(slug=slug)
+    except Tournament.DoesNotExist:
+        try:
+            Tournament.objects.get(id=slug)
+        except Tournament.DoesNotExist:
+            return 404, {"success": False, "message": f"Tournament with id/slug {slug} not found"}
+
+    admin_team_ids: set[int] = set()
+
+    try:
+        player = request.user.player_profile
+    except Player.DoesNotExist:
+        return 200, {"admin_team_ids": admin_team_ids}
+
+    registrations = Registration.objects.filter(tournament=tournament, player=player)
+
+    for reg in registrations:
+        authorized_roles = [
+            Registration.Role.CAPTAIN,
+            Registration.Role.SPIRIT_CAPTAIN,
+            Registration.Role.COACH,
+            Registration.Role.OWNER,
+        ]
+        if reg.role in authorized_roles:
+            admin_team_ids.add(reg.team.id)
+
+    return 200, {"admin_team_ids": admin_team_ids}
 
 
 @router.post(
@@ -188,6 +234,26 @@ def delete_tournament(
         }
     except Tournament.DoesNotExist:
         return 404, {"success": False, "message": f"Tournament with id {tournament_id} not found"}
+
+
+# Tournament Fields
+
+
+@router.get(
+    "/{tournament_id}/fields",
+    auth=None,
+    response={200: list[TournamentFieldSchema], 400: ErrorSchema},
+    tags=["fields"],
+)
+def get_fields_by_tournament_id(
+    request: AuthenticatedHttpRequest, tournament_id: int
+) -> tuple[int, list[TournamentField] | message_response]:
+    try:
+        tournament = Tournament.objects.get(id=tournament_id)
+    except Tournament.DoesNotExist:
+        return 400, {"message": "Tournament does not exist"}
+
+    return 200, list(TournamentField.objects.filter(tournament=tournament).order_by("name"))
 
 
 # Tournament Team Management
