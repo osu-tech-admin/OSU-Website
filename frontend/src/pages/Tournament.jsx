@@ -306,31 +306,6 @@ const Tournament = () => {
               </p>
             </A>
           </Show>
-          {/* <Show when={isPlayerRegInProgress()}>
-          <A
-            href={`/tournament/${params.slug}/register`}
-            class="mt-5 block w-full rounded-lg border border-gray-600 bg-white p-4 shadow-md"
-          >
-            <h5 class="mb-2 text-center text-xl font-bold capitalize tracking-tight text-blue-600 dark:text-blue-400">
-              Player Registrations
-            </h5>
-            <p class="text-center text-sm capitalize">
-              Open till{" "}
-              <span class="inline-flex font-medium">
-                {new Date(
-                  Date.parse(
-                    tournamentQuery.data?.event?.player_registration_end_date
-                  )
-                ).toLocaleDateString("en-US", {
-                  year: "numeric",
-                  month: "short",
-                  day: "numeric",
-                  timeZone: "UTC"
-                })}
-              </span>fo
-            </p>
-          </A>
-      </Show> */}
         </div>
 
         <Separator class="mb-4 mt-10" />
@@ -339,14 +314,14 @@ const Tournament = () => {
           <h2 class="ml-2 text-left text-lg font-bold">Overall Standings</h2>
 
           <Tabs defaultValue="current-standings-tab" class="mt-2 max-w-lg">
-            <TabsList class="flex h-fit justify-start text-left text-lg font-medium">
-              <TabsTrigger class="px-4 py-2" value="current-standings-tab">
+            <TabsList>
+              <TabsTrigger class="text-sm" value="current-standings-tab">
                 Current
               </TabsTrigger>
-              <TabsTrigger class="px-4 py-2" value="initial-standings-tab">
+              <TabsTrigger class="text-sm" value="initial-standings-tab">
                 Initial
               </TabsTrigger>
-              <TabsTrigger class="px-4 py-2" value="sotg-standings-tab">
+              <TabsTrigger class="text-sm" value="sotg-standings-tab">
                 SoTG
               </TabsTrigger>
             </TabsList>

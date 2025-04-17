@@ -144,174 +144,167 @@ const TournamentTeam = () => {
 
   return (
     <Show when={!teamQuery.data?.message}>
-      {/* <Breadcrumbs
-        icon={trophy}
-        pageList={[
-          { url: "/tournaments", name: "All Tournaments" },
-          {
-            url: `/tournament/${params.tournament_slug}`,
-            name: getTournamentBreadcrumbName(
-              tournamentQuery.data?.event?.slug || ""
-            )
-          }
-        ]}
-      /> */}
-      <Breadcrumb class="mb-6 mt-4 w-fit rounded-lg pl-2">
-        <BreadcrumbList>
-          <BreadcrumbItem>
-            <BreadcrumbLink href="/tournaments">
-              <span class="flex rounded-lg px-2 text-normal outline outline-1 outline-offset-2 outline-gray-400">
-                <Icon path={trophy} class="inline h-5 w-5 place-self-center" />
-              </span>
-            </BreadcrumbLink>
-          </BreadcrumbItem>
-          <BreadcrumbSeparator class="mx-1" />
-          <BreadcrumbItem>
-            <BreadcrumbLink href={`/tournament/${params.tournament_slug}`}>
-              <span class="rounded-lg px-2 text-normal outline outline-1 outline-offset-2 outline-gray-400">
-                {params.tournament_slug}
-              </span>
-            </BreadcrumbLink>
-          </BreadcrumbItem>
-          <BreadcrumbSeparator class="mx-1" />
-          <BreadcrumbItem>
-            <BreadcrumbLink current>
-              <span class="outline-foreround rounded-lg px-2 text-normal outline outline-1 outline-offset-2">
-                {params.team_slug}
-              </span>
-            </BreadcrumbLink>
-          </BreadcrumbItem>
-        </BreadcrumbList>
-      </Breadcrumb>
+      <div class="max-w-xl">
+        <Breadcrumb class="mb-6 mt-4 w-fit rounded-lg pl-2">
+          <BreadcrumbList>
+            <BreadcrumbItem>
+              <BreadcrumbLink href="/tournaments">
+                <span class="text-normal flex rounded-lg px-2 outline outline-1 outline-offset-2 outline-gray-400">
+                  <Icon
+                    path={trophy}
+                    class="inline h-5 w-5 place-self-center"
+                  />
+                </span>
+              </BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator class="mx-1" />
+            <BreadcrumbItem>
+              <BreadcrumbLink href={`/tournament/${params.tournament_slug}`}>
+                <span class="text-normal rounded-lg px-2 outline outline-1 outline-offset-2 outline-gray-400">
+                  {params.tournament_slug}
+                </span>
+              </BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator class="mx-1" />
+            <BreadcrumbItem>
+              <BreadcrumbLink current>
+                <span class="outline-muted-foreround text-normal rounded-lg px-2 outline outline-1 outline-offset-2">
+                  {params.team_slug}
+                </span>
+              </BreadcrumbLink>
+            </BreadcrumbItem>
+          </BreadcrumbList>
+        </Breadcrumb>
 
-      {/* Team image */}
-      <div class="flex justify-center">
-        <img
-          class="mr-3 inline-block h-24 w-24 rounded-full p-1 ring-2 ring-blue-600 dark:ring-blue-500"
-          src={teamQuery.data?.logo}
-          alt="Bordered avatar"
-        />
-      </div>
-      {/* Team name */}
-      <h1 class="mt-2 text-center">
-        <span class="w-fit bg-gradient-to-r from-blue-500 to-green-500 bg-clip-text text-2xl font-extrabold text-transparent">
-          <Suspense
-            fallback={
-              <span class="inline-block h-2 w-60 animate-pulse rounded-full bg-gray-200 dark:bg-gray-700" />
-            }
-          >
-            {teamQuery.data?.name}
-          </Suspense>
-        </span>
-      </h1>
+        {/* Team image */}
+        <div class="flex justify-center">
+          <img
+            class="mr-3 inline-block h-24 w-24 rounded-full p-1 ring-2 ring-blue-600 dark:ring-blue-500"
+            src={teamQuery.data?.logo}
+            alt="Bordered avatar"
+          />
+        </div>
+        {/* Team name */}
+        <h1 class="mt-2 text-center">
+          <span class="w-fit bg-gradient-to-r from-blue-500 to-green-500 bg-clip-text text-2xl font-extrabold text-transparent">
+            <Suspense
+              fallback={
+                <span class="inline-block h-2 w-60 animate-pulse rounded-full bg-gray-200 dark:bg-gray-700" />
+              }
+            >
+              {teamQuery.data?.name}
+            </Suspense>
+          </span>
+        </h1>
 
-      <Tabs defaultValue="matches-tab">
-        <TabsList class="mt-4 h-fit px-2 py-2">
-          <TabsTrigger class="px-4 py-2" value="matches-tab">
-            Matches
-          </TabsTrigger>
-          <TabsTrigger class="px-4 py-2" value="roster-tab">
-            Roster
-          </TabsTrigger>
-        </TabsList>
+        <Tabs defaultValue="matches-tab">
+          <TabsList class="mt-4">
+            <TabsTrigger class="text-sm" value="matches-tab">
+              Matches
+            </TabsTrigger>
+            <TabsTrigger class="text-sm" value="roster-tab">
+              Roster
+            </TabsTrigger>
+          </TabsList>
 
-        <TabsContent value="matches-tab">
-          <div class="mt-4">
-            <For each={Object.entries(matchesGroupedByDate())}>
-              {([tournamentDate, matches]) => (
-                <div class="mb-10">
-                  <Show when={tournamentDates().length > 1}>
-                    <div class="mb-5 ml-1">
-                      <h3 class="text-center text-lg font-bold">
-                        Day -{" "}
-                        {tournamentDates().indexOf(parseInt(tournamentDate)) +
-                          1}
-                      </h3>
-                    </div>
-                  </Show>
-                  <For each={matches}>
-                    {match => (
-                      <div
-                        class={clsx(
-                          "mb-5 block w-full rounded-lg border bg-white px-1 py-2 shadow dark:bg-gray-800",
-                          matchCardColorToBorderColorMap[
-                            matchOutcomeColor(match)
-                          ]
-                        )}
-                      >
-                        <MatchCard
-                          match={match}
-                          currentTeamNo={currTeamNo(match)}
-                          opponentTeamNo={oppTeamNo(match)}
-                          tournamentSlug={params.tournament_slug}
-                          useUCRegistrations={
-                            tournamentQuery.data?.use_uc_registrations
-                          }
-                          imgRingColor={"gray"}
-                          matchCardColorOverride={matchOutcomeColor(match)}
-                          buttonColor={matchOutcomeColor(match)}
-                        />
+          <TabsContent value="matches-tab">
+            <div class="mt-4">
+              <For each={Object.entries(matchesGroupedByDate())}>
+                {([tournamentDate, matches]) => (
+                  <div class="mb-10">
+                    <Show when={tournamentDates().length > 1}>
+                      <div class="mb-5 ml-1">
+                        <h3 class="text-center text-lg font-bold">
+                          Day -{" "}
+                          {tournamentDates().indexOf(parseInt(tournamentDate)) +
+                            1}
+                        </h3>
                       </div>
-                    )}
-                  </For>
-                </div>
-              )}
-            </For>
-          </div>
-        </TabsContent>
+                    </Show>
+                    <For each={matches}>
+                      {match => (
+                        <div
+                          class={clsx(
+                            "mb-5 block w-full rounded-lg border bg-white px-1 py-2 shadow dark:bg-gray-800",
+                            matchCardColorToBorderColorMap[
+                              matchOutcomeColor(match)
+                            ]
+                          )}
+                        >
+                          <MatchCard
+                            match={match}
+                            currentTeamNo={currTeamNo(match)}
+                            opponentTeamNo={oppTeamNo(match)}
+                            tournamentSlug={params.tournament_slug}
+                            useUCRegistrations={
+                              tournamentQuery.data?.use_uc_registrations
+                            }
+                            imgRingColor={"gray"}
+                            matchCardColorOverride={matchOutcomeColor(match)}
+                            buttonColor={matchOutcomeColor(match)}
+                          />
+                        </div>
+                      )}
+                    </For>
+                  </div>
+                )}
+              </For>
+            </div>
+          </TabsContent>
 
-        <TabsContent value="roster-tab">
-          {/* <Suspense
+          <TabsContent value="roster-tab">
+            {/* <Suspense
             // fallback={<RosterSkeleton />}
             fallback={"Loading roster"}
           > */}
-          <div class="ml-2">
-            <h2 class="my-4 text-xl font-bold underline underline-offset-2">
-              Players {`(${players()?.length || "-"})`}
-            </h2>
-            <Show
-              when={players()?.length !== 0}
-              fallback={
-                <Alert>
-                  {/* <IconTerminal /> */}
-                  {/* <AlertTitle>Heads up!</AlertTitle> */}
-                  <AlertDescription>
-                    There are no players in the roster
-                  </AlertDescription>
-                </Alert>
-              }
-            >
-              <div class="w-full divide-y sm:divide-y-0">
-                <For each={players()}>
-                  {registration => <Registration registration={registration} />}
-                </For>
-              </div>
-            </Show>
-            <h2 class="mb-4 mt-8 text-xl font-bold underline underline-offset-2">
-              Non-players {`(${nonPlayers()?.length || "-"})`}
-            </h2>
-            <Show
-              when={nonPlayers()?.length !== 0}
-              fallback={
-                <Alert>
-                  {/* <IconTerminal /> */}
-                  {/* <AlertTitle>Heads up!</AlertTitle> */}
-                  <AlertDescription>
-                    There are no non-players in the roster
-                  </AlertDescription>
-                </Alert>
-              }
-            >
-              <div class="w-full divide-y sm:divide-y-0">
-                <For each={nonPlayers()}>
-                  {registration => <Registration registration={registration} />}
-                </For>
-              </div>
-            </Show>
-          </div>
-          {/* </Suspense> */}
-        </TabsContent>
-      </Tabs>
+            <div class="ml-2">
+              <h2 class="my-4 text-xl font-bold underline underline-offset-2">
+                Players {`(${players()?.length || "-"})`}
+              </h2>
+              <Show
+                when={players()?.length !== 0}
+                fallback={
+                  <Alert>
+                    <AlertDescription>
+                      There are no players in the roster
+                    </AlertDescription>
+                  </Alert>
+                }
+              >
+                <div class="w-full divide-y sm:divide-y-0">
+                  <For each={players()}>
+                    {registration => (
+                      <Registration registration={registration} />
+                    )}
+                  </For>
+                </div>
+              </Show>
+              <h2 class="mb-4 mt-8 text-xl font-bold underline underline-offset-2">
+                Non-players {`(${nonPlayers()?.length || "-"})`}
+              </h2>
+              <Show
+                when={nonPlayers()?.length !== 0}
+                fallback={
+                  <Alert>
+                    <AlertDescription>
+                      There are no non-players in the roster
+                    </AlertDescription>
+                  </Alert>
+                }
+              >
+                <div class="w-full divide-y sm:divide-y-0">
+                  <For each={nonPlayers()}>
+                    {registration => (
+                      <Registration registration={registration} />
+                    )}
+                  </For>
+                </div>
+              </Show>
+            </div>
+            {/* </Suspense> */}
+          </TabsContent>
+        </Tabs>
+      </div>
     </Show>
   );
 };
