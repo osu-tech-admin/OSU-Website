@@ -12,6 +12,7 @@ import PlayerDetail from "./pages/PlayerDetail";
 import Tournament from "./pages/Tournament";
 import TournamentManager from "./pages/TournamentManager";
 import TournamentSchedule from "./pages/TournamentSchedule";
+import TournamentTeam from "./pages/TournamentTeam";
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
         <Route path="/tournament/:slug/schedule" component={TournamentSchedule} />
         {/* <Route path="/tournament/:slug/standings" component={Tournament} />
         <Route path="/tournament/:slug/rules" component={Tournament} /> */}
+        <Route path="/tournament/:tournament_slug/team/:team_slug" component={TournamentTeam} />
         {/* Authenticated routes */}
         <AuthenticatedRoute path="/tournament-manager" component={TournamentManager} />
       </Router>

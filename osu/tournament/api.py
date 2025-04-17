@@ -413,6 +413,22 @@ def list_registrations(
     return list(qs)
 
 
+@router.get(
+    "/{tournament_slug}/team/{team_slug}/roster",
+    response=list[RegistrationSchema],
+    tags=["registrations"],
+    auth=None,
+)
+def get_tournament_team_roster(
+    request: HttpRequest, tournament_slug: str, team_slug: str
+) -> list[Registration]:
+    print(tournament_slug, team_slug)
+    qs = Registration.objects.all().select_related("tournament", "team", "player")
+    qs = qs.filter(tournament__slug=tournament_slug, team__slug=team_slug)
+    print(list(qs))
+    return list(qs)
+
+
 @router.post(
     "/registrations",
     response={201: RegistrationSchema, 400: ErrorSchema, 401: ErrorSchema},

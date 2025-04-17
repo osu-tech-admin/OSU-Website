@@ -20,7 +20,7 @@ from osu.user.models import User
 class PlayerSimpleSchema(ModelSchema):
     class Config:
         model = Player
-        model_fields = ["id", "slug"]
+        model_fields = ["id", "slug", "gender"]
 
     user_first_name: str
     user_last_name: str

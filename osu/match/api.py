@@ -138,6 +138,20 @@ def list_matches(
     return list(queryset.order_by("time", "sequence_number"))
 
 
+@router.get(
+    "/tournament/{tournament_slug}/team/{team_slug}", response=list[MatchBasicSchema], auth=None
+)
+def list_tournament_team_matches(
+    request: HttpRequest, tournament_slug: str, team_slug: str
+) -> list[Match]:
+    qs = (
+        Match.objects.filter(tournament__slug=tournament_slug)
+        .filter(Q(team_1__slug=team_slug) | Q(team_2__slug=team_slug))
+        .select_related("team_1", "team_2", "pool")
+    )
+    return list(qs)
+
+
 @router.get("/{match_id}", response=MatchDetailSchema, auth=None)
 def get_match(request: HttpRequest, match_id: int) -> Match:
     """
