@@ -49,6 +49,10 @@ export const fetchTeams = async () => {
   return apiRequest("/api/teams", "GET");
 };
 
+export const fetchTeamBySlug = async teamSlug => {
+  return apiRequest(`/api/teams/by-slug/${teamSlug}`, "GET");
+};
+
 /**
  * Fetch tournaments
  * @returns {Promise<Array>} - List of tournaments
@@ -82,6 +86,19 @@ export const fetchTournamentBySlug = async tournamentSlug => {
  */
 export const fetchFieldsByTournamentId = async tournamentId => {
   return apiRequest(`/api/tournaments/${tournamentId}/fields`, "GET");
+};
+
+/**
+ * Fetch a team's roster for a tournanment
+ * @param {string} tournamentSlug - Tournament Slug
+ * @param {string} teamSlug - Tournament Slug
+ * @returns {Promise<Array>} - List of fields
+ */
+export const fetchTournamentTeamRoster = async (tournamentSlug, teamSlug) => {
+  return apiRequest(
+    `/api/tournaments/${tournamentSlug}/team/${teamSlug}/roster`,
+    "GET"
+  );
 };
 
 /**
@@ -127,6 +144,20 @@ export const fetchPositionPools = async tournamentId => {
  */
 export const fetchMatches = async tournamentId => {
   return apiRequest(`/api/matches?tournament_id=${tournamentId}`, "GET");
+};
+
+/**
+ * Fetch all matches for a team in a tournament
+ * @param {number} tournamentSlug - Tournament Slug
+ * @param {number} teamSlug - Team Slug
+ * @returns {Promise<Array>} - List of matches
+ */
+
+export const fetchTournamentTeamMatches = async (tournamentSlug, teamSlug) => {
+  return apiRequest(
+    `/api/matches/tournament/${tournamentSlug}/team/${teamSlug}`,
+    "GET"
+  );
 };
 
 export const fetchUserPermissionsForMatch = async tournamentSlug => {
@@ -326,7 +357,7 @@ export const generateTournamentFixtures = async ({ tournament_id }) => {
 };
 
 /**
- * Add a match score
+ * Submit match score AS A STAFF USER
  * @param {Object} params - Parameters
  * @param {number} params.match_id - Match ID
  * @param {Object} params.body - Score data
@@ -338,6 +369,17 @@ export const addMatchScore = async ({ match_id, body }) => {
     "POST",
     body
   );
+};
+
+/**
+ * Submit match score as a team admin (captain, spirit captain, owner or coach)
+ * @param {Object} params - Parameters
+ * @param {number} params.match_id - Match ID
+ * @param {Object} params.body - Score data
+ * @returns {Promise<Object>} - Updated match data
+ */
+export const submitMatchScore = async ({ match_id, body }) => {
+  return apiRequest(`/api/matches/${match_id}/submit-score`, "POST", body);
 };
 
 /**

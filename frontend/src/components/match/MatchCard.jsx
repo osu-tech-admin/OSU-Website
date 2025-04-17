@@ -103,12 +103,13 @@ const TournamentMatch = props => {
     );
   };
 
-  // createEffect(() => {
-  //   if (userAccessQuery.isSuccess) {
-  //     console.log(userAccessQuery.data?.admin_team_ids)
-  //     console.log(props.match["team_1"].id, props.match["team_2"].id, isMatchTeamAdmin())
-  //   }
-  // })
+  createEffect(() => {
+    if (userAccessQuery.isSuccess) {
+      console.log(userAccessQuery.data?.admin_team_ids)
+      console.log(props.match["team_1"].id, props.match["team_2"].id, isMatchTeamAdmin())
+      console.log(hasUserNotSubmittedScores())
+    }
+  })
 
 
   const hasUserNotSubmittedScores = () => {
