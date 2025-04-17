@@ -197,6 +197,7 @@ class MatchAdmin(admin.ModelAdmin[Match]):
 
 @admin.register(Registration)
 class RegistrationAdmin(admin.ModelAdmin[Registration]):
+<<<<<<< HEAD
     search_fields = [
         "tournament__name",
         "player__user__first_name",
@@ -204,6 +205,9 @@ class RegistrationAdmin(admin.ModelAdmin[Registration]):
         "player__user__username",
         "team__name",
     ]
+=======
+    search_fields = ["tournament__name"]
+>>>>>>> admin: Add registrations
     list_display = ["get_player_name", "get_team_name", "get_tournament_name"]
 
     @admin.display(description="Tournament Name", ordering="tournament__name")
@@ -217,3 +221,7 @@ class RegistrationAdmin(admin.ModelAdmin[Registration]):
     @admin.display(description="Team Name", ordering="team__name")
     def get_team_name(self, obj: Registration) -> str:
         return obj.team.name
+
+    @admin.display(description="Player Name", ordering="player__name")
+    def get_player_name(self, obj: Registration) -> str:
+        return obj.player.user.get_full_name()
