@@ -2,7 +2,7 @@ import { createForm, required } from "@modular-forms/solid";
 import { useMutation } from "@tanstack/solid-query";
 import { createSignal, Show } from "solid-js";
 
-import { addMatchScore } from "../../queries";
+import { submitMatchScore } from "../../queries";
 // import Error from "../alerts/Error";
 // import Info from "../alerts/Info";
 import TextInput from "../form/TextInput";
@@ -22,8 +22,8 @@ const MatchScoreForm = componentProps => {
   const [status, setStatus] = createSignal("");
   const [error, setError] = createSignal("");
 
-  const addMatchScoreMutation = useMutation(() => ({
-    mutationFn: addMatchScore,
+  const submitScoreMutation = useMutation(() => ({
+    mutationFn: submitMatchScore,
     onSuccess: () => {
       setStatus("Updated Match Score... Thanks!");
     },
@@ -37,7 +37,7 @@ const MatchScoreForm = componentProps => {
     setStatus("");
     setError("");
 
-    addMatchScoreMutation.mutate({
+    submitScoreMutation.mutate({
       match_id: componentProps?.match?.id,
       body: values
     });
