@@ -23,6 +23,9 @@ export default defineConfig({
     port: 3000,
     host: process.env.PRIVATE_IP ?? "localhost",
     strictPort: true,
+    watch: {
+      usePolling: true
+    },
     proxy: {
       // Proxy API, admin, static and user-uploaded-file requests to Django backend
       "/api": {
