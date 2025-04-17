@@ -163,7 +163,7 @@ const TournamentSchedule = () => {
         ]}
       /> */}
 
-      <Breadcrumb class="pl-2 mt-4 mb-6 w-fit rounded-lg ">
+      <Breadcrumb class="pl-2 mt-4 mb-6 w-fit rounded-lg">
         <BreadcrumbList>
           <BreadcrumbItem>
             <BreadcrumbLink href="/tournaments">
@@ -198,11 +198,11 @@ const TournamentSchedule = () => {
 
         {/* <div class="mb-4"> */}
         <Tabs defaultValue="day-tab-1" class="mt-2 max-w-lg">
-          <TabsList class="flex h-fit w-fit justify-start px-3 py-2 text-left text-lg font-medium">
+          <TabsList>
             <For each={tournamentDays()}>
               {(day, i) => (
                 <TabsTrigger
-                  class="rounded-lg px-3 py-2"
+                  class="text-sm"
                   value={"day-tab-" + (i() + 1)}
                 >
                   {"Day " + (i() + 1)}
