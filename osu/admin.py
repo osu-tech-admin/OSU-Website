@@ -13,6 +13,7 @@ from osu.tournament.models import (
     Pool,
     PositionPool,
     Registration,
+    Registration,
     Tournament,
     TournamentField,
 )

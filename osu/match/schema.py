@@ -6,6 +6,7 @@ from osu.match.models import Match, MatchScore, SpiritScore
 from osu.player.models import Player
 from osu.team.models import Team
 from osu.tournament.models import Tournament, TournamentField
+from osu.tournament.schema import BracketSchema, CrossPoolSchema, PoolSchema, PositionPoolSchema
 
 
 class PlayerBasicSchema(ModelSchema):
@@ -70,6 +71,11 @@ class MatchScoreSchema(ModelSchema):
 
 
 class MatchBasicSchema(ModelSchema):
+    pool: PoolSchema | None
+    cross_pool: CrossPoolSchema | None
+    bracket: BracketSchema | None
+    position_pool: PositionPoolSchema | None
+
     class Config:
         model = Match
         model_fields = [
@@ -82,6 +88,8 @@ class MatchBasicSchema(ModelSchema):
             "status",
             "video_url",
             "sequence_number",
+            "placeholder_seed_1",
+            "placeholder_seed_2",
         ]
 
     team_1: TeamBasicSchema
