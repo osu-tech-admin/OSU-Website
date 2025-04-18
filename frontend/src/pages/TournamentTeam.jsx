@@ -41,7 +41,6 @@ import { Alert, AlertDescription, AlertTitle } from "~/components/ui/alert";
 
 const TournamentTeam = () => {
   const params = useParams();
-  console.log(params.tournament_slug, params.team_slug);
   const [tournamentDates, setTournamentDates] = createSignal([]);
   const [matchesGroupedByDate, setMatchesGroupedByDate] = createSignal({});
   const [doneFetching, setDoneFetching] = createSignal(false);
