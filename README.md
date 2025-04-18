@@ -56,6 +56,10 @@ A modern web application for managing and organizing Off Season Ultimate activit
    ```bash
    python manage.py runserver
    ```
+   To serve on LAN
+   ```bash
+   PRIVATE_IP=your_private_ip python manage.py runserver 0.0.0.0:8000
+   ```
 
 ### Frontend Setup
 
@@ -73,13 +77,17 @@ A modern web application for managing and organizing Off Season Ultimate activit
 
 3. Start the development server:
    ```bash
-   yarn dev
+   npm run dev
+   ```
+   To serve on LAN
+   ```bash
+   PRIVATE_IP=your_private_ip npm run dev
    ```
 
 ## 🏃‍♂️ Development
 
 - Backend API runs on `http://localhost:8000`
-- Frontend development server runs on `http://localhost:5173`
+- Frontend development server runs on `http://localhost:3000`
 
 ## 📦 Building for Production
 
@@ -87,7 +95,7 @@ A modern web application for managing and organizing Off Season Ultimate activit
 
 ```bash
 cd frontend
-yarn build
+npm run build
 ```
 
 ### Backend Production Setup
