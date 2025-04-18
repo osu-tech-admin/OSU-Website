@@ -75,6 +75,12 @@ class MatchBasicSchema(ModelSchema):
     cross_pool: CrossPoolSchema | None
     bracket: BracketSchema | None
     position_pool: PositionPoolSchema | None
+    suggested_score_team_1: MatchScoreSchema | None = None
+    suggested_score_team_2: MatchScoreSchema | None = None
+    spirit_score_team_1: SpiritScoreSchema | None = None
+    spirit_score_team_2: SpiritScoreSchema | None = None
+    self_spirit_score_team_1: SpiritScoreSchema | None = None
+    self_spirit_score_team_2: SpiritScoreSchema | None = None
 
     class Config:
         model = Match

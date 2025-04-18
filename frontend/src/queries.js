@@ -382,6 +382,14 @@ export const submitMatchScore = async ({ match_id, body }) => {
   return apiRequest(`/api/matches/${match_id}/submit-score`, "POST", body);
 };
 
+export const submitMatchSpiritScore = async ({ match_id, body }) => {
+  return apiRequest(
+    `/api/matches/${match_id}/submit-spirit-score`,
+    "POST",
+    body
+  );
+};
+
 /**
  * Delete a match
  * @param {Object} params - Parameters

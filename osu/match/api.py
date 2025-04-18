@@ -147,7 +147,7 @@ def list_tournament_team_matches(
     qs = (
         Match.objects.filter(tournament__slug=tournament_slug)
         .filter(Q(team_1__slug=team_slug) | Q(team_2__slug=team_slug))
-        .select_related("team_1", "team_2", "pool")
+        .select_related("team_1", "team_2", "pool", "cross_pool", "bracket", "position_pool")
     )
     return list(qs)
 

@@ -13,14 +13,14 @@ import {
 import { fetchUserPermissionsForMatch } from "~/queries";
 import { getMatchCardColor } from "./utils";
 import MatchScoreForm from "./MatchScoreForm";
-// import MatchSpiritScoreForm from "../tournament/MatchSpiritScoreForm";
-// import SpiritScoreTable from "../tournament/SpiritScoreTable";
-// import FinalSpiritScores from "./FinalSpiritScores";
 import MatchHeader from "./MatchHeader";
+import SubmitScore from "./SubmitScore";
+// import MatchSpiritScoreForm from "./MatchSpiritScoreForm";
+// import SpiritScoreTable from "./SpiritScoreTable";
+// import FinalSpiritScores from "./FinalSpiritScores";
+// import SubmitSpiritScore from "./SubmitSpiritScore";
 // import CreateStatsButton from "./stats/CreateStatsButton";
 // import ViewStatsButton from "./stats/ViewStatsButton";
-import SubmitScore from "./SubmitScore";
-// import SubmitSpiritScore from "./SubmitSpiritScore";
 
 /**
  * Returns a match block between 2 teams.
@@ -45,7 +45,6 @@ const TournamentMatch = props => {
     queryFn: () => fetchUserPermissionsForMatch(props.tournamentSlug)
   }));
 
-  
   createEffect(() => {
     setCurrTeamNo(props.currentTeamNo || 1);
     setOppTeamNo(props.opponentTeamNo || 2);
@@ -72,7 +71,7 @@ const TournamentMatch = props => {
       })
     );
   });
-  
+
   const checkIfSuggestedScoresClash = (
     suggested_score_team_1,
     suggested_score_team_2
@@ -80,22 +79,22 @@ const TournamentMatch = props => {
     if (!suggested_score_team_1 || !suggested_score_team_2) {
       return false;
     }
-    
+
     return (
       suggested_score_team_1["score_team_1"] !==
-      suggested_score_team_2["score_team_1"] ||
+        suggested_score_team_2["score_team_1"] ||
       suggested_score_team_1["score_team_2"] !==
-      suggested_score_team_2["score_team_2"]
+        suggested_score_team_2["score_team_2"]
     );
   };
-  
+
   const isMatchTeamAdmin = () =>
     userAccessQuery.data?.admin_team_ids?.length > 0 &&
-  (userAccessQuery.data?.admin_team_ids.indexOf(props.match["team_1"].id) >
-  -1 ||
-  userAccessQuery.data?.admin_team_ids.indexOf(props.match["team_2"].id) >
-  -1);
-  
+    (userAccessQuery.data?.admin_team_ids.indexOf(props.match["team_1"].id) >
+      -1 ||
+      userAccessQuery.data?.admin_team_ids.indexOf(props.match["team_2"].id) >
+        -1);
+
   const isTeamAdminOf = team_id => {
     return (
       userAccessQuery?.data?.admin_team_ids?.length > 0 &&
@@ -106,11 +105,10 @@ const TournamentMatch = props => {
   createEffect(() => {
     if (userAccessQuery.isSuccess) {
       console.log(userAccessQuery.data?.admin_team_ids)
-      console.log(props.match["team_1"].id, props.match["team_2"].id, isMatchTeamAdmin())
+      console.log(props.match["team_1"].name, props.match["team_2"].name, isMatchTeamAdmin())
       console.log(hasUserNotSubmittedScores())
     }
   })
-
 
   const hasUserNotSubmittedScores = () => {
     return (
@@ -121,17 +119,18 @@ const TournamentMatch = props => {
     );
   };
 
-  const canUserSubmitSpiritScores = () => {
-    return (
-      (isTeamAdminOf(props.match["team_1"].id) &&
-        !props.match["spirit_score_team_2"] &&
-        (props.match["suggested_score_team_1"] ||
-          props.match.status === "COM")) ||
-      (isTeamAdminOf(props.match["team_2"].id) &&
-        !props.match["spirit_score_team_1"] &&
-        (props.match["suggested_score_team_2"] || props.match.status === "COM"))
-    );
-  };
+  // const canUserSubmitSpiritScores = () => {
+  //   return (
+  //     (isTeamAdminOf(props.match["team_1"].id) &&
+  //       !props.match["spirit_score_team_2"] &&
+  //       (props.match["suggested_score_team_1"] ||
+  //         props.match.status === "completed")) ||
+  //     (isTeamAdminOf(props.match["team_2"].id) &&
+  //       !props.match["spirit_score_team_1"] &&
+  //       (props.match["suggested_score_team_2"] ||
+  //         props.match.status === "completed"))
+  //   );
+  // };
 
   const isStaff = () => {
     return (
@@ -229,7 +228,7 @@ const TournamentMatch = props => {
       </div>
 
       {/* Match score */}
-      <Show when={props.match.status === "COM"}>
+      <Show when={props.match.status === "completed"}>
         <p class="text-center font-bold">
           <Switch>
             <Match
@@ -288,9 +287,9 @@ const TournamentMatch = props => {
           props.match.duration_mins +
           " mins"}
       </p>
-      {/* Watch button */}
       <div class="mt-2 flex flex-wrap items-center justify-center gap-2">
-        <Show when={props.match.video_url}>
+        {/* Watch button */}
+        {/* <Show when={props.match.video_url}>
           <a
             class="flex justify-center"
             href={props.match.video_url}
@@ -329,9 +328,10 @@ const TournamentMatch = props => {
               </span>
             </button>
           </a>
-        </Show>
+        </Show> */}
+
         {/* Live score buttons */}
-        <Show when={props.match.stats}>
+        {/* <Show when={props.match.stats}>
           <A
             href={`/tournament/${props.tournamentSlug}/match/${props.match.id}/live`}
           >
@@ -348,9 +348,10 @@ const TournamentMatch = props => {
               match={props.match}
             />
           </A>
-        </Show>
+        </Show> */}
+
         {/* Score buttons */}
-        <Show
+        {/* <Show
           when={
             props.match[`spirit_score_team_${currTeamNo()}`] &&
             props.match[`spirit_score_team_${oppTeamNo()}`]
@@ -661,7 +662,7 @@ const TournamentMatch = props => {
               </Show>
             </div>
           </FinalSpiritScores>
-        </Show>
+        </Show> */}
       </div>
 
       {/*Team Admin Actions*/}
@@ -694,7 +695,7 @@ const TournamentMatch = props => {
               {
                 props.match[`suggested_score_team_${currTeamNo()}`][
                   "entered_by"
-                ]["full_name"].split(" ")[0]
+                ]["user_first_name"]
               }
               {" | "}
               {props.match[`team_${currTeamNo()}`].name}
@@ -717,7 +718,7 @@ const TournamentMatch = props => {
               {
                 props.match[`suggested_score_team_${oppTeamNo()}`][
                   "entered_by"
-                ]["full_name"].split(" ")[0]
+                ]["user_first_name"]
               }
               {" | "}
               {props.match[`team_${oppTeamNo()}`].name}
@@ -779,9 +780,10 @@ const TournamentMatch = props => {
         </div>
       </Show>
 
-      <Show
+      {/* Spirit score pending */}
+      {/* <Show
         when={
-          (props.match.status === "COM" || props.match.status === "SCH") &&
+          (props.match.status === "completed" || props.match.status === "scheduled") &&
           isStaff() &&
           (!props.match["spirit_score_team_2"] ||
             !props.match["spirit_score_team_1"])
@@ -803,11 +805,12 @@ const TournamentMatch = props => {
             {props.match[`team_${oppTeamNo()}`].name} pending
           </p>
         </Show>
-      </Show>
+      </Show> */}
 
-      <Show
+      {/* Spirit Score submit */}
+      {/* <Show
         when={
-          (props.match.status === "COM" || props.match.status === "SCH") &&
+          (props.match.status === "completed" || props.match.status === "scheduled") &&
           isMatchTeamAdmin() &&
           canUserSubmitSpiritScores()
         }
@@ -852,7 +855,7 @@ const TournamentMatch = props => {
             </Show>
           </SubmitSpiritScore>
         </div>
-      </Show>
+      </Show> */}
 
       {/* <Show
         when={
