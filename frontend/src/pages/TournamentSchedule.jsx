@@ -41,6 +41,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
 const TournamentSchedule = () => {
   const params = useParams();
   const [tournamentDays, setTournamentDays] = createSignal([]);
+  const [weeks, setWeeks] = createSignal([]);
   const [flash, setFlash] = createSignal(-1);
   const [matchDayTimeFieldMap, setMatchDayTimeFieldMap] = createStore({});
   const [dayFieldMap, setDayFieldMap] = createStore({});
@@ -72,23 +73,6 @@ const TournamentSchedule = () => {
     );
   }
 
-  createEffect(() => {
-    if (
-      tournamentQuery.status === "success" &&
-      !tournamentQuery.data?.message
-    ) {
-      let days = [];
-      let start = new Date(Date.parse(tournamentQuery.data?.start_date));
-      let end = new Date(Date.parse(tournamentQuery.data?.end_date));
-
-      for (var d = start; d <= end; d.setDate(d.getDate() + 1)) {
-        days.push(new Date(d));
-      }
-
-      setTournamentDays(days);
-    }
-  });
-
   const mapFieldIdToField = fields => {
     let newFieldsMap = {};
     fields?.map(field => {
@@ -101,6 +85,7 @@ const TournamentSchedule = () => {
     if (matchesQuery.status === "success" && !matchesQuery.data?.message) {
       setMatchDayTimeFieldMap(reconcile({}));
       setDayFieldMap(reconcile({}));
+      let days = new Set();
       matchesQuery.data?.map(match => {
         if (match.time && match.field) {
           const day = new Date(Date.parse(match.time)).toLocaleDateString(
@@ -129,10 +114,62 @@ const TournamentSchedule = () => {
 
           setDayFieldMap(day, {});
           setDayFieldMap(day, match.field?.id, true);
+
+          days.add(new Date(Date.parse(match.time)));
         }
       });
+      setTournamentDays(Array.from(days));
       setDoneBuildingScheduleMap(true);
     }
+  });
+
+  createEffect(() => {
+    // Get the weeks from the tournament days, Monday to Sunday
+    // Group tournament days by week (Sunday as last day)
+    const weekMap = tournamentDays().reduce((acc, day) => {
+      // Clone the date to avoid modifying the original
+      const currentDate = new Date(day);
+      // Get the day of the week (0 is Sunday, 1 is Monday, etc.)
+      const dayOfWeek = currentDate.getUTCDay();
+      // Calculate the date of Monday (start of week)
+      // If it's Sunday (0), go back 6 days to get to Monday
+      // Otherwise subtract (dayOfWeek - 1) days
+      const mondayDate = new Date(currentDate);
+      mondayDate.setDate(
+        currentDate.getDate() - (dayOfWeek === 0 ? 6 : dayOfWeek - 1)
+      );
+
+      // Format the Monday date to use as a key
+      const weekKey = `Week ${mondayDate.toLocaleDateString("en-US", { month: "short", day: "numeric", timeZone: "UTC" })}`;
+
+      // Add the day to the appropriate week
+      if (!acc[weekKey]) {
+        acc[weekKey] = [];
+      }
+      acc[weekKey].push(day);
+      // Sort days within each week in ascending order
+      acc[weekKey].sort((a, b) => new Date(a) - new Date(b));
+
+      return acc;
+    }, {});
+
+    // sort the weeks by the week key which is date and month and store in weekMap
+    const sortedWeekMap = Object.entries(weekMap)
+      .sort((a, b) => {
+        const dateA = new Date(a[0]);
+        const dateB = new Date(b[0]);
+        return dateA - dateB;
+      })
+      .reduce((acc, [key, days]) => {
+        // Extract week number from the key and create a new key in the format "Week X"
+        const weekNumber = Object.keys(acc).length + 1;
+        acc[`Week ${weekNumber}`] = days;
+        return acc;
+      }, {});
+
+    setWeeks(
+      Object.entries(sortedWeekMap).map(([key, days]) => ({ key, days }))
+    );
   });
 
   return (
@@ -149,11 +186,11 @@ const TournamentSchedule = () => {
         </div>
       }
     >
-      <Breadcrumb class="pl-2 mt-4 mb-6 w-fit rounded-lg">
+      <Breadcrumb class="mb-6 mt-4 w-fit rounded-lg pl-2">
         <BreadcrumbList>
           <BreadcrumbItem>
             <BreadcrumbLink href="/tournaments">
-              <span class="flex rounded-lg px-2 outline outline-1 outline-offset-2 outline-gray-400 text-base">
+              <span class="flex rounded-lg px-2 text-base outline outline-1 outline-offset-2 outline-gray-400">
                 <Icon path={trophy} class="inline h-5 w-5 place-self-center" />
               </span>
             </BreadcrumbLink>
@@ -161,7 +198,7 @@ const TournamentSchedule = () => {
           <BreadcrumbSeparator class="mx-1" />
           <BreadcrumbItem>
             <BreadcrumbLink href={`/tournament/${tournamentQuery.data?.slug}`}>
-              <span class="rounded-lg px-2 outline outline-1 outline-offset-2 outline-gray-400 text-base">
+              <span class="rounded-lg px-2 text-base outline outline-1 outline-offset-2 outline-gray-400">
                 {tournamentQuery.data?.slug}
               </span>
             </BreadcrumbLink>
@@ -169,7 +206,7 @@ const TournamentSchedule = () => {
           <BreadcrumbSeparator class="mx-1" />
           <BreadcrumbItem>
             <BreadcrumbLink current>
-              <span class="rounded-lg px-2 outline outline-1 outline-offset-2 outline-foreround text-base">
+              <span class="outline-foreround rounded-lg px-2 text-base outline outline-1 outline-offset-2">
                 Schedule
               </span>
             </BreadcrumbLink>
@@ -182,117 +219,160 @@ const TournamentSchedule = () => {
           <span class="w-fit text-2xl font-extrabold">Schedule</span>
         </h1>
 
-        {/* <div class="mb-4"> */}
-        <Tabs defaultValue="day-tab-1" class="mt-2 max-w-lg">
-          <TabsList>
-            <For each={tournamentDays()}>
-              {(day, i) => (
+        <Tabs defaultValue="week-tab-week-1" class="mt-2 max-w-lg">
+          <TabsList class="grid w-full grid-cols-4">
+            <For each={weeks()}>
+              {week => (
                 <TabsTrigger
                   class="text-sm"
-                  value={"day-tab-" + (i() + 1)}
+                  value={
+                    "week-tab-" + week.key.toLowerCase().replace(/ /g, "-")
+                  }
                 >
-                  {"Day " + (i() + 1)}
+                  {week.key}
                 </TabsTrigger>
               )}
             </For>
           </TabsList>
 
-          <For each={tournamentDays()}>
-            {(day, i) => (
-              <TabsContent value={"day-tab-" + (i() + 1)}>
-                <div class="rounded-lg p-4">
-                  {/* <Show
+          <For each={weeks()}>
+            {week => (
+              <TabsContent
+                value={"week-tab-" + week.key.toLowerCase().replace(/ /g, "-")}
+              >
+                <Tabs defaultValue="day-tab-1" class="mt-2 max-w-lg">
+                  <TabsList class="grid w-full grid-cols-2">
+                    <For each={week.days}>
+                      {(day, i) => (
+                        <TabsTrigger
+                          class="text-sm"
+                          value={
+                            "day-tab-" +
+                            (i() + 1)
+                          }
+                        >
+                          {day.toLocaleDateString("en-US", {
+                            weekday: "long",
+                            year: "numeric",
+                            month: "long",
+                            day: "numeric",
+                            timeZone: "UTC"
+                          })}
+                        </TabsTrigger>
+                      )}
+                    </For>
+                  </TabsList>
+
+                  <For each={week.days}>
+                    {(day, i) => (
+                      <TabsContent value={"day-tab-" + (i() + 1)}>
+                        <div class="rounded-lg p-4">
+                          {/* <Show
                     when={doneBuildingScheduleMap()}
                     // fallback={<DayScheduleSkeleton />}
                     fallback={"Loading Schedule..."}
                   /> */}
-                  <For each={Object.keys(matchDayTimeFieldMap).sort()}>
-                    {day2 => (
-                      <Show
-                        when={sameDay(day, new Date(Date.parse(day2 + " GMT")))}
-                      >
-                        <div class="relative mb-8 overflow-x-auto">
-                          <Switch>
-                            <Match when={fieldsQuery.isError}>
-                              <p>{fieldsQuery.error.message}</p>
-                            </Match>
-                            <Match when={fieldsQuery.isSuccess}>
-                              <ScheduleTable
-                                dayFieldMap={dayFieldMap}
-                                day={day2}
-                                matchDayTimeFieldMap={matchDayTimeFieldMap}
-                                setFlash={setFlash}
-                                fieldsMap={mapFieldIdToField(fieldsQuery.data)}
-                              />
-                            </Match>
-                          </Switch>
-                          <p class="mt-2 text-sm">
-                            * CP - Cross Pool | B - Brackets
-                          </p>
-                        </div>
-                      </Show>
-                    )}
-                  </For>
-                  <Show
-                    when={
-                      matchesQuery.data?.filter(match =>
-                        sameDay(day, new Date(Date.parse(match.time)))
-                      ).length === 0
-                    }
-                  >
-                    <div
-                      class="mb-4 flex items-center rounded-lg border border-blue-300 bg-blue-50 p-4 text-sm text-blue-800 dark:border-blue-800 dark:bg-gray-800 dark:text-blue-400"
-                      role="alert"
-                    >
-                      <svg
-                        class="me-3 inline h-4 w-4 flex-shrink-0"
-                        aria-hidden="true"
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="currentColor"
-                        viewBox="0 0 20 20"
-                      >
-                        <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
-                      </svg>
-                      <span class="sr-only">Info</span>
-                      <div>
-                        <span class="font-medium capitalize">
-                          No Matches Present on this day!
-                        </span>
-                      </div>
-                    </div>
-                  </Show>
-                  {/* <Suspense
+                          <For each={Object.keys(matchDayTimeFieldMap).sort()}>
+                            {day2 => (
+                              <Show
+                                when={sameDay(
+                                  day,
+                                  new Date(Date.parse(day2 + " GMT"))
+                                )}
+                              >
+                                <div class="relative mb-8 overflow-x-auto">
+                                  <Switch>
+                                    <Match when={fieldsQuery.isError}>
+                                      <p>{fieldsQuery.error.message}</p>
+                                    </Match>
+                                    <Match when={fieldsQuery.isSuccess}>
+                                      <ScheduleTable
+                                        dayFieldMap={dayFieldMap}
+                                        day={day2}
+                                        matchDayTimeFieldMap={
+                                          matchDayTimeFieldMap
+                                        }
+                                        setFlash={setFlash}
+                                        fieldsMap={mapFieldIdToField(
+                                          fieldsQuery.data
+                                        )}
+                                      />
+                                    </Match>
+                                  </Switch>
+                                  <p class="mt-2 text-sm">
+                                    * CP - Cross Pool | B - Brackets
+                                  </p>
+                                </div>
+                              </Show>
+                            )}
+                          </For>
+                          <Show
+                            when={
+                              matchesQuery.data?.filter(match =>
+                                sameDay(day, new Date(Date.parse(match.time)))
+                              ).length === 0
+                            }
+                          >
+                            <div
+                              class="mb-4 flex items-center rounded-lg border border-blue-300 bg-blue-50 p-4 text-sm text-blue-800 dark:border-blue-800 dark:bg-gray-800 dark:text-blue-400"
+                              role="alert"
+                            >
+                              <svg
+                                class="me-3 inline h-4 w-4 flex-shrink-0"
+                                aria-hidden="true"
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="currentColor"
+                                viewBox="0 0 20 20"
+                              >
+                                <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
+                              </svg>
+                              <span class="sr-only">Info</span>
+                              <div>
+                                <span class="font-medium capitalize">
+                                  No Matches Present on this day!
+                                </span>
+                              </div>
+                            </div>
+                          </Show>
+                          {/* <Suspense
                     // fallback={<TournamentMatchesSkeleton />}
                     fallback={"Loading matches..."}
                   > */}
-                    <For each={matchesQuery.data}>
-                      {match => (
-                        <Show
-                          when={sameDay(day, new Date(Date.parse(match.time)))}
-                        >
-                          <div
-                            id={match.id}
-                            class={clsx(
-                              flash() == match.id
-                                ? "bg-blue-100 text-black dark:bg-slate-700 dark:text-white"
-                                : "bg-white dark:bg-gray-800",
-                              "mb-5 block w-full rounded-lg border px-1 py-2 shadow transition",
-                              matchCardColorToBorderColorMap[
-                                getMatchCardColor(match)
-                              ]
+                          <For each={matchesQuery.data}>
+                            {match => (
+                              <Show
+                                when={sameDay(
+                                  day,
+                                  new Date(Date.parse(match.time))
+                                )}
+                              >
+                                <div
+                                  id={match.id}
+                                  class={clsx(
+                                    flash() == match.id
+                                      ? "bg-blue-100 text-black dark:bg-slate-700 dark:text-white"
+                                      : "bg-white dark:bg-gray-800",
+                                    "mb-5 block w-full rounded-lg border px-1 py-2 shadow transition",
+                                    matchCardColorToBorderColorMap[
+                                      getMatchCardColor(match)
+                                    ]
+                                  )}
+                                >
+                                  <MatchCard
+                                    match={match}
+                                    tournamentSlug={params.slug}
+                                    bothTeamsClickable
+                                  />
+                                </div>
+                              </Show>
                             )}
-                          >
-                            <MatchCard
-                              match={match}
-                              tournamentSlug={params.slug}
-                              bothTeamsClickable
-                            />
-                          </div>
-                        </Show>
-                      )}
-                    </For>
-                  {/* </Suspense> */}
-                </div>
+                          </For>
+                          {/* </Suspense> */}
+                        </div>
+                      </TabsContent>
+                    )}
+                  </For>
+                </Tabs>
               </TabsContent>
             )}
           </For>

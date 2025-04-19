@@ -25,7 +25,7 @@ const TabsTrigger = props => {
       class={cn(
         "inline-flex w-full items-center justify-center whitespace-nowrap text-base font-medium ",
         "py-1.5 ring-offset-background transition-all rounded-md",
-        "data-[selected]:bg-background data-[selected]:text-foreground data-[selected]:shadow-sm",
+        "data-[selected]:bg-background-tab data-[selected]:text-foreground-tab data-[selected]:shadow-sm",
         "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
         local.class
       )}
