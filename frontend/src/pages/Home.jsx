@@ -25,7 +25,7 @@ export default function Home() {
           <div class="flex w-full max-w-md flex-col justify-center gap-4 sm:flex-row">
             <Button
               variant="default"
-              class="w-full bg-blue-950"
+              class="w-full"
               onClick={() => (window.location.href = "/login")}
             >
               Sign In
@@ -38,7 +38,7 @@ export default function Home() {
       <section class="bg-blue-950 px-4 py-8">
         <div class="container mx-auto">
           {/* <h2 class="mb-4 text-center text-3xl font-bold">Featured Leagues</h2> */}
-          <div class="flex flex-col items-center">
+          <div class="flex flex-col items-center gap-6 md:flex-row md:items-stretch">
             <div class="max-w-xl rounded-lg bg-card p-8 shadow-sm">
               <div class="flex justify-end">
                 <div class="flex w-fit items-center gap-2 rounded-full bg-orange-500 px-4 py-1 text-sm font-semibold text-white">
@@ -68,7 +68,6 @@ export default function Home() {
                     city's top players and teams.
                   </p>
                   <Button
-                    class="bg-blue-950"
                     onClick={() => (window.location.href = "/leagues/mul")}
                   >
                     View League
@@ -76,12 +75,6 @@ export default function Home() {
                 </div>
               </div>
             </div>
-          </div>
-        </div>
-
-        <div class="container mx-auto px-4 mt-8">
-          {/* <h2 class="mb-12 text-center text-3xl font-bold">Features</h2> */}
-          <div class="grid grid-cols-1 gap-8 md:grid-cols-3">
             <div class="rounded-lg bg-card p-6 shadow-sm">
               <div class="mb-4 flex items-center gap-4">
                 <div class="flex h-12 w-12 items-center justify-center rounded-full bg-blue-950">
@@ -100,7 +93,9 @@ export default function Home() {
                     />
                   </svg>
                 </div>
-                <h3 class="text-xl font-semibold text-blue-950">Player Profiles</h3>
+                <h3 class="text-xl font-semibold text-blue-950">
+                  Player Profiles
+                </h3>
               </div>
 
               <p class="mb-4 text-muted-foreground">
@@ -108,7 +103,6 @@ export default function Home() {
               </p>
               <Button
                 variant="default"
-                class="bg-blue-950"
                 onClick={() => (window.location.href = "/players")}
               >
                 Browse Players

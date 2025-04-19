@@ -48,7 +48,7 @@ export default function Header() {
         <NavigationMenuItem>
           <A
             href="/"
-            class="text-lg font-semibold transition-colors hover:text-primary"
+            class="text-lg font-semibold transition-colors hover:text-yellow-400"
             onClick={onClick}
           >
             Home
@@ -57,7 +57,7 @@ export default function Header() {
         <NavigationMenuItem>
           <A
             href="/tournament/mul-25"
-            class="text-lg font-semibold transition-colors hover:text-primary"
+            class="text-lg font-semibold transition-colors hover:text-yellow-400"
             onClick={onClick}
           >
             MUL '25
@@ -66,7 +66,7 @@ export default function Header() {
         <NavigationMenuItem>
           <A
             href="/players"
-            class="text-lg font-semibold transition-colors hover:text-primary"
+            class="text-lg font-semibold transition-colors hover:text-yellow-400"
             onClick={onClick}
           >
             Players
@@ -76,7 +76,7 @@ export default function Header() {
           <NavigationMenuItem>
             <A
               href="/dashboard"
-              class="text-lg font-semibold transition-colors hover:text-primary"
+              class="text-lg font-semibold transition-colors hover:text-yellow-400"
               onClick={onClick}
             >
               My Account
@@ -88,7 +88,7 @@ export default function Header() {
   };
 
   return (
-    <header class="sticky top-0 z-50 w-full border-b border-border bg-blue-950 text-white backdrop-blur">
+    <header class="sticky top-0 z-50 w-full bg-blue-950 text-white backdrop-blur">
       <div class="container flex h-16 items-center justify-between px-4 md:px-6">
         {/* Logo */}
         <A href="/" class="flex items-center space-x-2">
@@ -117,7 +117,7 @@ export default function Header() {
           >
             <div class="flex items-center space-x-2">
               <A href="/dashboard">
-                <Button variant="default" size="lg" class="text-md bg-white text-blue-950"> 
+                <Button variant="default" size="lg" class="text-md bg-white text-primary hover:bg-yellow-400"> 
                   My Account
                 </Button>
               </A>
@@ -147,6 +147,7 @@ export default function Header() {
             variant="ghost"
             size="icon"
             aria-label="Toggle menu"
+            class="text-white focus:bg-transparent focus:text-white hover:bg-transparent hover:text-white "
             onClick={() => setIsMenuOpen(!isMenuOpen())}
           >
             <Show
