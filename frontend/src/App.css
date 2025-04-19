@@ -46,6 +46,9 @@
     --ring: 240 5.9% 10%;
 
     --radius: 0.5rem;
+
+    --background-tab: 226 57% 21%;
+    --foreground-tab: 0 0% 98%;
   }
 
   .dark,
