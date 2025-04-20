@@ -219,12 +219,12 @@ const TournamentSchedule = () => {
           <span class="w-fit text-2xl font-extrabold">Schedule</span>
         </h1>
 
-        <Tabs defaultValue="week-tab-week-1" class="mt-2 max-w-lg">
+        <Tabs defaultValue="week-tab-week-1" class="mt-2 w-full">
           <TabsList class="grid w-full grid-cols-4">
             <For each={weeks()}>
               {week => (
                 <TabsTrigger
-                  class="text-sm"
+                  class="text-sm md:text-base"
                   value={
                     "week-tab-" + week.key.toLowerCase().replace(/ /g, "-")
                   }
@@ -240,12 +240,12 @@ const TournamentSchedule = () => {
               <TabsContent
                 value={"week-tab-" + week.key.toLowerCase().replace(/ /g, "-")}
               >
-                <Tabs defaultValue="day-tab-1" class="mt-2 max-w-lg">
+                <Tabs defaultValue="day-tab-1" class="mt-2 w-full">
                   <TabsList class="grid w-full grid-cols-2">
                     <For each={week.days}>
                       {(day, i) => (
                         <TabsTrigger
-                          class="text-sm"
+                          class="text-sm md:text-base"
                           value={
                             "day-tab-" +
                             (i() + 1)
