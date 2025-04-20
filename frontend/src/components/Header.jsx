@@ -56,11 +56,11 @@ export default function Header() {
         </NavigationMenuItem>
         <NavigationMenuItem>
           <A
-            href="/tournament/mul-25"
+            href="/tournament/mul-s5"
             class="text-lg font-semibold transition-colors hover:text-yellow-400"
             onClick={onClick}
           >
-            MUL '25
+            MUL
           </A>
         </NavigationMenuItem>
         <NavigationMenuItem>
