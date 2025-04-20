@@ -94,7 +94,7 @@ export default function Header() {
         <A href="/" class="flex items-center space-x-2">
           <img src={osuLogo} alt="OSU Logo" class="h-16 w-auto" />
           <span class="hidden text-xl font-bold sm:inline-block">
-            Off Season Ultimate
+            Off-Season Ultimate
           </span>
         </A>
 
