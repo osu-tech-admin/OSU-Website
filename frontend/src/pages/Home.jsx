@@ -68,7 +68,7 @@ export default function Home() {
                     city's top players and teams.
                   </p>
                   <Button
-                    onClick={() => (window.location.href = "/leagues/mul")}
+                    onClick={() => (window.location.href = "/tournament/mul-s5")}
                   >
                     View League
                   </Button>

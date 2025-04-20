@@ -84,7 +84,7 @@ export const makeTitle = slug => {
 
   for (var i = 0; i < words.length; i++) {
     var word = words[i];
-    words[i] = word.charAt(0).toUpperCase() + word.slice(1);
+    words[i] = word.toUpperCase();
   }
 
   return words.join(" ");
