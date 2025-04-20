@@ -37,7 +37,7 @@ import MatchCard from "~/components/match/MatchCard";
 import ScheduleTable from "~/components/tournament/ScheduleTable";
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
-
+import { makeTitle } from "~/utils";
 const TournamentSchedule = () => {
   const params = useParams();
   const [tournamentDays, setTournamentDays] = createSignal([]);
@@ -186,36 +186,41 @@ const TournamentSchedule = () => {
         </div>
       }
     >
-      <Breadcrumb class="mb-6 mt-4 w-fit rounded-lg pl-2">
-        <BreadcrumbList>
-          <BreadcrumbItem>
-            <BreadcrumbLink href="/tournaments">
-              <span class="flex rounded-lg px-2 text-base outline outline-1 outline-offset-2 outline-gray-400">
-                <Icon path={trophy} class="inline h-5 w-5 place-self-center" />
-              </span>
-            </BreadcrumbLink>
-          </BreadcrumbItem>
-          <BreadcrumbSeparator class="mx-1" />
-          <BreadcrumbItem>
-            <BreadcrumbLink href={`/tournament/${tournamentQuery.data?.slug}`}>
-              <span class="rounded-lg px-2 text-base outline outline-1 outline-offset-2 outline-gray-400">
-                {tournamentQuery.data?.slug}
-              </span>
-            </BreadcrumbLink>
-          </BreadcrumbItem>
-          <BreadcrumbSeparator class="mx-1" />
-          <BreadcrumbItem>
-            <BreadcrumbLink current>
-              <span class="outline-foreround rounded-lg px-2 text-base outline outline-1 outline-offset-2">
-                Schedule
-              </span>
-            </BreadcrumbLink>
-          </BreadcrumbItem>
-        </BreadcrumbList>
-      </Breadcrumb>
+      <div class="min-h-screen bg-background px-4 py-4">
+        <Breadcrumb class="w-fit rounded-lg">
+          <BreadcrumbList>
+            {/* <BreadcrumbItem>
+              <BreadcrumbLink href="/tournaments">
+                <span class="flex rounded-lg px-2 text-base outline outline-1 outline-offset-2 outline-gray-400">
+                  <Icon
+                    path={trophy}
+                    class="inline h-5 w-5 place-self-center"
+                  />
+                </span>
+              </BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator class="mx-1" /> */}
+            <BreadcrumbItem>
+              <BreadcrumbLink
+                href={`/tournament/${tournamentQuery.data?.slug}`}
+              >
+                <span class="rounded-lg px-2 text-base outline outline-1 outline-offset-2 outline-gray-400">
+                  {makeTitle(tournamentQuery.data?.slug || "")}
+                </span>
+              </BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator class="mx-1" />
+            <BreadcrumbItem>
+              <BreadcrumbLink current>
+                <span class="outline-foreround rounded-lg px-2 text-base outline outline-1 outline-offset-2">
+                  Schedule
+                </span>
+              </BreadcrumbLink>
+            </BreadcrumbItem>
+          </BreadcrumbList>
+        </Breadcrumb>
 
-      <div class="mx-1">
-        <h1 class="ml-1 text-left sm:text-center">
+        <h1 class="mt-4 text-left sm:text-center">
           <span class="w-fit text-2xl font-extrabold">Schedule</span>
         </h1>
 
@@ -246,10 +251,7 @@ const TournamentSchedule = () => {
                       {(day, i) => (
                         <TabsTrigger
                           class="text-sm md:text-base"
-                          value={
-                            "day-tab-" +
-                            (i() + 1)
-                          }
+                          value={"day-tab-" + (i() + 1)}
                         >
                           {day.toLocaleDateString("en-US", {
                             weekday: "long",
@@ -266,7 +268,7 @@ const TournamentSchedule = () => {
                   <For each={week.days}>
                     {(day, i) => (
                       <TabsContent value={"day-tab-" + (i() + 1)}>
-                        <div class="rounded-lg p-4">
+                        <div class="rounded-lg">
                           {/* <Show
                     when={doneBuildingScheduleMap()}
                     // fallback={<DayScheduleSkeleton />}

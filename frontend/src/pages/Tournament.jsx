@@ -129,9 +129,9 @@ const Tournament = () => {
         pageList={[{ url: "/tournaments", name: "All Tournaments" }]}
       /> */}
 
-      <div class="ml-1">
-        <div class="mt-3 rounded-lg border border-gray-200 px-3 py-3 sm:ml-0">
-          <div class="ml-0 inline-flex items-center justify-start gap-3">
+      <div class="min-h-screen bg-background px-4 py-4">
+        <div class="rounded-lg border border-gray-200 px-3 py-3">
+          <div class="inline-flex items-center justify-start gap-3">
             <span class="w-fit text-2xl font-extrabold">
               {tournamentQuery.data?.name}
             </span>
@@ -237,7 +237,7 @@ const Tournament = () => {
             class="mt-3 block w-full rounded-lg  border border-gray-300 p-4 shadow-md shadow-gray-200"
           >
             <div class="inline-flex w-full items-center justify-between gap-2">
-              <span>
+              <span class="w-full flex-1">
                 <p class="text-left text-lg font-bold capitalize tracking-tight text-gray-800 sm:text-center">
                   Schedule
                 </p>
@@ -255,7 +255,7 @@ const Tournament = () => {
             class="mt-3 block w-full rounded-lg border border-gray-300 p-4 shadow-md shadow-gray-200"
           >
             <div class="inline-flex w-full items-center justify-between gap-2">
-              <span>
+              <span class="w-full flex-1">
                 <p class="text-left text-lg font-bold capitalize tracking-tight text-gray-800 sm:text-center">
                   Standings
                 </p>
@@ -273,7 +273,7 @@ const Tournament = () => {
             class="mt-3 block w-full rounded-lg border border-gray-300 p-4 shadow-md shadow-gray-200"
           >
             <div class="inline-flex w-full items-center justify-between gap-2">
-              <span>
+              <span class="w-full flex-1">
                 <p class="text-left text-lg font-bold capitalize tracking-tight text-gray-800 sm:text-center">
                   Leaderboard
                 </p>
@@ -311,9 +311,9 @@ const Tournament = () => {
         <Separator class="mb-4 mt-10" />
 
         <div class="">
-          <h2 class="ml-2 text-left text-lg font-bold">Overall Standings</h2>
+          <h2 class="text-left text-lg font-bold">Overall Standings</h2>
 
-          <Tabs defaultValue="current-standings-tab" class="mt-2 max-w-lg">
+          <Tabs defaultValue="current-standings-tab" class="mt-2 w-full">
             <TabsList>
               <TabsTrigger class="text-sm" value="current-standings-tab">
                 Current
