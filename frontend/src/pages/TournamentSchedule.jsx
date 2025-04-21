@@ -220,9 +220,7 @@ const TournamentSchedule = () => {
           </BreadcrumbList>
         </Breadcrumb>
 
-        <h1 class="mt-4 text-left sm:text-center">
-          <span class="w-fit text-2xl font-extrabold">Schedule</span>
-        </h1>
+       
 
         <Tabs defaultValue="week-tab-week-1" class="mt-2 w-full">
           <TabsList class="grid w-full grid-cols-4">
