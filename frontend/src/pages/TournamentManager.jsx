@@ -22,11 +22,11 @@ import {
   createPositionPool,
   deleteMatch,
   deleteTournament,
-  fetchBrackets,
+  // fetchBrackets,
   fetchCrossPool,
   fetchFieldsByTournamentId,
   fetchMatches,
-  fetchPools,
+  // fetchPools,
   fetchPositionPools,
   fetchTeams,
   fetchTournaments,
@@ -182,21 +182,21 @@ const TournamentManager = props => {
     enabled: selectedTournamentID() !== 0
   }));
 
-  const poolsQuery = useQuery(() => ({
-    queryKey: ["pools", selectedTournamentID()],
-    queryFn: () => fetchPools(selectedTournamentID()),
-    enabled: selectedTournamentID() !== 0
-  }));
+  // const poolsQuery = useQuery(() => ({
+  //   queryKey: ["pools", selectedTournamentID()],
+  //   queryFn: () => fetchPools(selectedTournamentID()),
+  //   enabled: selectedTournamentID() !== 0
+  // }));
   const crossPoolQuery = useQuery(() => ({
     queryKey: ["cross-pool", selectedTournamentID()],
     queryFn: () => fetchCrossPool(selectedTournamentID()),
     enabled: selectedTournamentID() !== 0
   }));
-  const bracketQuery = useQuery(() => ({
-    queryKey: ["brackets", selectedTournamentID()],
-    queryFn: () => fetchBrackets(selectedTournamentID()),
-    enabled: selectedTournamentID() !== 0
-  }));
+  // const bracketQuery = useQuery(() => ({
+  //   queryKey: ["brackets", selectedTournamentID()],
+  //   queryFn: () => fetchBrackets(selectedTournamentID()),
+  //   enabled: selectedTournamentID() !== 0
+  // }));
   const postionPoolsQuery = useQuery(() => ({
     queryKey: ["position-pools", selectedTournamentID()],
     queryFn: () => fetchPositionPools(selectedTournamentID()),

@@ -102,12 +102,12 @@ export const fetchTournamentTeamRoster = async (tournamentSlug, teamSlug) => {
 };
 
 /**
- * Fetch pools by tournament ID
- * @param {number} tournamentId - Tournament ID
+ * Fetch pools by tournament slug
+ * @param {string} tournamentSlug - Tournament slug
  * @returns {Promise<Array>} - List of pools
  */
-export const fetchPools = async tournamentId => {
-  return apiRequest(`/api/tournaments/${tournamentId}/pools`, "GET");
+export const fetchPoolsBySlug = async tournamentSlug => {
+  return apiRequest(`/api/tournaments/${tournamentSlug}/pools`, "GET");
 };
 
 /**
@@ -120,12 +120,12 @@ export const fetchCrossPool = async tournamentId => {
 };
 
 /**
- * Fetch brackets by tournament ID
- * @param {number} tournamentId - Tournament ID
+ * Fetch brackets by tournament slug
+ * @param {string} tournamentSlug - Tournament slug
  * @returns {Promise<Array>} - List of brackets
  */
-export const fetchBrackets = async tournamentId => {
-  return apiRequest(`/api/tournaments/${tournamentId}/brackets`, "GET");
+export const fetchBracketsBySlug = async tournamentSlug => {
+  return apiRequest(`/api/tournaments/${tournamentSlug}/brackets`, "GET");
 };
 
 /**

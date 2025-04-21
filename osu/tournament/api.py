@@ -536,11 +536,10 @@ def delete_registration(
 
 
 # Pool endpoints
-@router.get("/pools", response=list[PoolSchema], tags=["pools"], auth=None)
-@paginate(PageNumberPagination)
+@router.get("/{tournament_slug}/pools", response=list[PoolSchema], tags=["pools"], auth=None)
 def list_pools(
     request: HttpRequest,
-    tournament_id: int | None = None,
+    tournament_slug: str,
     name: str | None = None,
 ) -> list[Pool]:
     """
@@ -548,8 +547,8 @@ def list_pools(
     """
     qs = Pool.objects.all().select_related("tournament")
 
-    if tournament_id:
-        qs = qs.filter(tournament_id=tournament_id)
+    if tournament_slug:
+        qs = qs.filter(tournament__slug=tournament_slug)
 
     if name:
         qs = qs.filter(name=name)
@@ -774,11 +773,12 @@ def delete_cross_pool(
 
 
 # Bracket endpoints
-@router.get("/brackets", response=list[BracketSchema], tags=["brackets"], auth=None)
-@paginate(PageNumberPagination)
+@router.get(
+    "/{tournament_slug}/brackets", response=list[BracketSchema], tags=["brackets"], auth=None
+)
 def list_brackets(
     request: HttpRequest,
-    tournament_id: int | None = None,
+    tournament_slug: str,
     name: str | None = None,
 ) -> list[Bracket]:
     """
@@ -786,8 +786,8 @@ def list_brackets(
     """
     qs = Bracket.objects.all().select_related("tournament")
 
-    if tournament_id:
-        qs = qs.filter(tournament_id=tournament_id)
+    if tournament_slug:
+        qs = qs.filter(tournament__slug=tournament_slug)
 
     if name:
         qs = qs.filter(name=name)
