@@ -338,41 +338,31 @@ const TournamentSchedule = () => {
                     // fallback={<TournamentMatchesSkeleton />}
                     fallback={"Loading matches..."}
                   > */}
-                          <For each={matchesQuery.data}>
-                            {match => (
-                              <Show
-                                when={sameDay(
-                                  day,
-                                  new Date(Date.parse(match.time))
-                                )}
-                              >
-                                <div
-                                  id={match.id}
-                                  class={clsx(
-                                    flash() == match.id
-                                      ? "bg-blue-100 text-black dark:bg-slate-700 dark:text-white"
-                                      : "bg-white dark:bg-gray-800",
-                                    "mb-5 block w-full rounded-lg border px-1 py-2 shadow transition",
-                                    matchCardColorToBorderColorMap[
-                                      getMatchCardColor(match)
-                                    ]
-                                  )}
-                                >
-                                  <MatchCard
-                                    match={match}
-                                    tournamentSlug={params.slug}
-                                    bothTeamsClickable
-                                  />
-                                </div>
-                              </Show>
+                    <For each={matchesQuery.data}>
+                      {match => (
+                        <Show
+                          when={sameDay(day, new Date(Date.parse(match.time)))}
+                        >
+                          <div
+                            id={match.id}
+                            class={clsx(
+                              flash() == match.id
+                                ? "bg-blue-100 text-black"
+                                : "bg-white",
+                              "mb-5 block w-full rounded-lg border border-gray-400 px-1 py-2 transition shadow-sm",
                             )}
-                          </For>
-                          {/* </Suspense> */}
-                        </div>
-                      </TabsContent>
-                    )}
-                  </For>
-                </Tabs>
+                          >
+                            <MatchCard
+                              match={match}
+                              tournamentSlug={params.slug}
+                              bothTeamsClickable
+                            />
+                          </div>
+                        </Show>
+                      )}
+                    </For>
+                  {/* </Suspense> */}
+                </div>
               </TabsContent>
             )}
           </For>
