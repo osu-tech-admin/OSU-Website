@@ -207,7 +207,7 @@ const TournamentTeam = () => {
           </TabsList>
 
           <TabsContent value="matches-tab">
-            <div class="mt-4">
+            <div class="mt-4 p-4">
               <For each={Object.entries(matchesGroupedByDate())}>
                 {([tournamentDate, matches]) => (
                   <div class="mb-10">
