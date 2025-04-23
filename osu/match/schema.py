@@ -75,12 +75,12 @@ class MatchBasicSchema(ModelSchema):
     cross_pool: CrossPoolSchema | None
     bracket: BracketSchema | None
     position_pool: PositionPoolSchema | None
-    suggested_score_team_1: MatchScoreSchema | None = None
-    suggested_score_team_2: MatchScoreSchema | None = None
-    spirit_score_team_1: SpiritScoreSchema | None = None
-    spirit_score_team_2: SpiritScoreSchema | None = None
-    self_spirit_score_team_1: SpiritScoreSchema | None = None
-    self_spirit_score_team_2: SpiritScoreSchema | None = None
+    # suggested_score_team_1: MatchScoreSchema | None = None
+    # suggested_score_team_2: MatchScoreSchema | None = None
+    # spirit_score_team_1: SpiritScoreSchema | None = None
+    # spirit_score_team_2: SpiritScoreSchema | None = None
+    # self_spirit_score_team_1: SpiritScoreSchema | None = None
+    # self_spirit_score_team_2: SpiritScoreSchema | None = None
 
     class Config:
         model = Match
@@ -105,6 +105,10 @@ class MatchBasicSchema(ModelSchema):
 
 
 class MatchDetailSchema(MatchBasicSchema):
+    team_1: TeamBasicSchema
+    team_2: TeamBasicSchema
+    tournament: TournamentBasicSchema
+    field: TournamentFieldSchema | None = None
     placeholder_seed_1: int
     placeholder_seed_2: int
     created_at: datetime
@@ -115,6 +119,20 @@ class MatchDetailSchema(MatchBasicSchema):
     spirit_score_team_2: SpiritScoreSchema | None = None
     self_spirit_score_team_1: SpiritScoreSchema | None = None
     self_spirit_score_team_2: SpiritScoreSchema | None = None
+
+    class Config:
+        model = Match
+        model_fields = [
+            "id",
+            "name",
+            "time",
+            "duration_mins",
+            "score_team_1",
+            "score_team_2",
+            "status",
+            "video_url",
+            "sequence_number",
+        ]
 
 
 # Input schemas
