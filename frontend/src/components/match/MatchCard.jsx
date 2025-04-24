@@ -144,7 +144,7 @@ const TournamentMatch = props => {
   };
 
   return (
-    <A href={`./match/${props.match?.id}`}>
+    <A href={`/tournament/${props.tournamentSlug}/schedule/match/${props.match?.id}`}>
       <div class="px-1">
         <div class="mb-4 inline-flex w-full justify-between gap-2">
           <span class="w-full">

@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/solid-query";
-import { fetchMatch } from "~/queries";
+import { fetchMatch, fetchMatchStats } from "~/queries";
 import { useParams, A } from "@solidjs/router";
 
 import {
@@ -25,10 +25,20 @@ const MatchDetails = () => {
   const [startTime, setStartTime] = createSignal();
   const [endTime, setEndTime] = createSignal();
   const [isMatchLive, setIsMatchLive] = createSignal(false);
+  const [shouldRefetch, setShouldRefetch] = createSignal(false);
 
   const matchQuery = useQuery(() => ({
     queryKey: ["match", params.match_id],
     queryFn: () => fetchMatch(params.match_id)
+  }));
+
+  const matchStatsQuery = useQuery(() => ({
+    queryKey: ["match-stats", params.match_id],
+    queryFn: () => fetchMatchStats(params.match_id),
+    refetchInterval: shouldRefetch ? 60000 : 2000000,
+    staleTime: shouldRefetch ? 300000 : 5000000,
+    refetchOnWindowFocus: true,
+    enabled: !!params.match_id
   }));
 
   createEffect(() => {
@@ -59,7 +69,38 @@ const MatchDetails = () => {
         timeZone: "UTC"
       });
 
+      // console.log('start: ', startTimeObject)
+      // console.log(startTimeObject.toLocaleTimeString("en-US", {
+      //   year: "numeric",
+      //   month: "short",
+      //   day: "numeric",
+      //   hour: "numeric",
+      //   minute: "numeric",
+      //   timeZone: "UTC"
+      // }))
+      
+      // console.log('end: ', endTimeObject)
+      // console.log(endTimeObject.toLocaleTimeString("en-US", {
+      //   year: "numeric",
+      //   month: "short",
+      //   day: "numeric",
+      //   hour: "numeric",
+      //   minute: "numeric",
+      //   timeZone: "UTC"
+      // }))
+      
+      // console.log('curr: ', new Date(Date.now()))
+      // console.log(currTime)
+
       setIsMatchLive(startTime() <= currTime && currTime <= endTime());
+    }
+  });
+
+  createEffect(() => {
+    if (matchStatsQuery.isSuccess && matchStatsQuery.data) {
+      if (matchStatsQuery.data.status !== "completed") {
+        setShouldRefetch(true);
+      }
     }
   });
 
@@ -96,18 +137,16 @@ const MatchDetails = () => {
         <div>
           <Switch>
             <Match when={matchQuery.data?.status === "completed"}>
-              <div class="rounded-xl bg-gray-200 px-3 py-0.5 sm:py-0 text-gray-800 outline outline-1 outline-gray-400 text-sm sm:text-base">
+              <div class="rounded-xl bg-gray-200 px-3 py-0.5 text-sm text-gray-800 outline outline-1 outline-gray-400 sm:py-0 sm:text-base">
                 Completed
               </div>
             </Match>
-            <Match when={matchQuery.data?.status === "scheduled"}>
-              <div class="rounded-xl bg-blue-200 px-3 py-0.5 sm:py-0 text-blue-800 outline outline-1 outline-blue-400 text-sm sm:text-base">
+            <Match when={matchQuery.data?.status === "scheduled" && !isMatchLive()}>
+              <div class="rounded-xl bg-blue-200 px-3 py-0.5 text-sm text-blue-800 outline outline-1 outline-blue-400 sm:py-0 sm:text-base">
                 Upcoming
               </div>
             </Match>
-            <Match
-              when={isMatchLive()}
-            >
+            <Match when={matchQuery.data?.status === "scheduled" && isMatchLive()}>
               <div class="flex items-center justify-between gap-2 rounded-xl bg-red-100 px-3 py-0.5 text-sm text-red-600 outline outline-1 outline-red-400 sm:py-0 sm:text-base">
                 <span class="relative flex size-2">
                   <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-red-400 opacity-75"></span>
@@ -124,7 +163,7 @@ const MatchDetails = () => {
 
       <div class="mt-4 flex flex-col gap-4 px-1">
         {/* Team 1 */}
-        <div class="flex w-full items-center justify-between text-lg">
+        <div class="flex w-full items-center justify-between text-base sm:text-lg">
           <div>
             <Show
               when={matchQuery.data?.team_1}
@@ -136,7 +175,7 @@ const MatchDetails = () => {
             >
               <img
                 class={clsx(
-                  "mr-2 inline-block h-6 w-6 rounded-full object-cover p-1 ring-1 ring-gray-400"
+                  "mr-2 inline-block h-8 w-8 rounded-full object-cover p-1 ring-1 ring-gray-400"
                 )}
                 src={matchQuery.data?.team_1?.logo}
                 alt="Bordered avatar"
@@ -192,7 +231,7 @@ const MatchDetails = () => {
         </div>
 
         {/* Team 2 */}
-        <div class="flex w-full items-center justify-between text-lg">
+        <div class="flex w-full items-center justify-between text-base sm:text-lg">
           <div>
             <Show
               when={matchQuery.data?.team_2}
@@ -204,7 +243,7 @@ const MatchDetails = () => {
             >
               <img
                 class={clsx(
-                  "mr-2 inline-block h-6 w-6 rounded-full object-cover p-1 ring-1 ring-gray-400"
+                  "mr-2 inline-block h-8 w-8 rounded-full object-cover p-1 ring-1 ring-gray-400"
                 )}
                 src={matchQuery.data?.team_2?.logo}
                 alt="Bordered avatar"
@@ -269,13 +308,13 @@ const MatchDetails = () => {
           <TabsTrigger value="gallery-tab">Gallery</TabsTrigger>
         </TabsList>
         <TabsContent value="timeline-tab">
-          <MatchTimeline match={matchQuery.data} />
+          <MatchTimeline match={matchQuery.data} stats={matchStatsQuery.data}/>
         </TabsContent>
         <TabsContent value="mvp-msp-tab">
-            <MatchMvpMsp match={matchQuery.data}/>
+          <MatchMvpMsp match={matchQuery.data} />
         </TabsContent>
         <TabsContent value="gallery-tab">
-            <MatchGallery match={matchQuery.data} />
+          <MatchGallery match={matchQuery.data} />
         </TabsContent>
       </Tabs>
     </div>
