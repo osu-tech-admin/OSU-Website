@@ -220,8 +220,6 @@ const TournamentSchedule = () => {
           </BreadcrumbList>
         </Breadcrumb>
 
-       
-
         <Tabs defaultValue="week-tab-week-1" class="mt-2 w-full">
           <TabsList class="grid w-full grid-cols-4">
             <For each={weeks()}>
@@ -268,10 +266,10 @@ const TournamentSchedule = () => {
                       <TabsContent value={"day-tab-" + (i() + 1)}>
                         <div class="rounded-lg">
                           {/* <Show
-                    when={doneBuildingScheduleMap()}
-                    // fallback={<DayScheduleSkeleton />}
-                    fallback={"Loading Schedule..."}
-                  /> */}
+                            when={doneBuildingScheduleMap()}
+                            // fallback={<DayScheduleSkeleton />}
+                            fallback={"Loading Schedule..."}
+                          /> */}
                           <For each={Object.keys(matchDayTimeFieldMap).sort()}>
                             {day2 => (
                               <Show
@@ -335,34 +333,41 @@ const TournamentSchedule = () => {
                             </div>
                           </Show>
                           {/* <Suspense
-                    // fallback={<TournamentMatchesSkeleton />}
-                    fallback={"Loading matches..."}
-                  > */}
-                    <For each={matchesQuery.data}>
-                      {match => (
-                        <Show
-                          when={sameDay(day, new Date(Date.parse(match.time)))}
-                        >
-                          <div
-                            id={match.id}
-                            class={clsx(
-                              flash() == match.id
-                                ? "bg-blue-100 text-black"
-                                : "bg-white",
-                              "mb-5 block w-full rounded-lg border border-gray-400 px-1 py-2 transition shadow-sm",
+                            // fallback={<TournamentMatchesSkeleton />}
+                            fallback={"Loading matches..."}
+                          > */}
+                          <For each={matchesQuery.data}>
+                            {match => (
+                              <Show
+                                when={sameDay(
+                                  day,
+                                  new Date(Date.parse(match.time))
+                                )}
+                              >
+                                <div
+                                  id={match.id}
+                                  class={clsx(
+                                    flash() == match.id
+                                      ? "bg-blue-100 text-black"
+                                      : "bg-white",
+                                    "mb-5 block w-full rounded-lg border border-gray-400 px-1 py-2 shadow-sm transition"
+                                  )}
+                                >
+                                  <MatchCard
+                                    match={match}
+                                    tournamentSlug={params.slug}
+                                    bothTeamsClickable
+                                  />
+                                </div>
+                              </Show>
                             )}
-                          >
-                            <MatchCard
-                              match={match}
-                              tournamentSlug={params.slug}
-                              bothTeamsClickable
-                            />
-                          </div>
-                        </Show>
-                      )}
-                    </For>
-                  {/* </Suspense> */}
-                </div>
+                          </For>
+                          {/* </Suspense> */}
+                        </div>
+                      </TabsContent>
+                    )}
+                  </For>
+                </Tabs>
               </TabsContent>
             )}
           </For>
