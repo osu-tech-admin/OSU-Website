@@ -6,13 +6,14 @@ from django.http import HttpRequest
 from django.shortcuts import get_object_or_404
 from ninja import Router
 
-from osu.match.models import Match, MatchScore, SpiritScore
+from osu.match.models import Match, MatchScore, MatchStats, SpiritScore
 from osu.match.schema import (
     ErrorResponseSchema,
     MatchBasicSchema,
     MatchCreateSchema,
     MatchDetailSchema,
     MatchScoreSubmitSchema,
+    MatchStatsSchema,
     MatchUpdateSchema,
     SpiritScoreSubmitSchema,
     StaffMatchScoreSubmitSchema,
@@ -158,6 +159,14 @@ def get_match(request: HttpRequest, match_id: int) -> Match:
     Get detailed information about a specific match
     """
     return get_object_or_404(Match, id=match_id)
+
+
+@router.get("/{match_id}/stats", response=MatchStatsSchema | None, auth=None)
+def get_match_stats(request: HttpRequest, match_id: int) -> MatchStats | None:
+    try:
+        return MatchStats.objects.get(match_id=match_id)
+    except MatchStats.DoesNotExist:
+        return None
 
 
 @router.post("", response={201: MatchDetailSchema, 400: ErrorResponseSchema})
