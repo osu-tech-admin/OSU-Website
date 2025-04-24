@@ -65,28 +65,12 @@ const TournamentSchedule = () => {
     enabled: !!tournamentQuery.data?.id
   }));
 
-  function sameDay(dayString, d2) {
-    const d2String = d2.toLocaleDateString("en-US", {
-      weekday: "long",
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-      timeZone: "UTC"
-    });
-
-    const pattern =
-      /^(?<day>\w+), (?<month>\w+) (?<date>\d{1,2}), (?<year>\d{4})$/;
-    const dayStringMatch = dayString.match(pattern);
-    const d2StringMatch = d2String.match(pattern);
-
-    if (dayStringMatch && d2StringMatch) {
-      return (
-        dayStringMatch.groups.year === d2StringMatch.groups.year &&
-        dayStringMatch.groups.month === d2StringMatch.groups.month &&
-        dayStringMatch.groups.date === d2StringMatch.groups.date
-      );
-    }
-    return false;
+  function sameDay(d1, d2) {
+    return (
+      d1.getUTCFullYear() === d2.getUTCFullYear() &&
+      d1.getUTCMonth() === d2.getUTCMonth() &&
+      d1.getUTCDate() === d2.getUTCDate()
+    );
   }
 
   const mapFieldIdToField = fields => {
@@ -107,14 +91,12 @@ const TournamentSchedule = () => {
           const day = new Date(Date.parse(match.time)).toLocaleDateString(
             "en-US",
             {
-              weekday: "long",
               year: "numeric",
-              month: "long",
+              month: "short",
               day: "numeric",
               timeZone: "UTC"
             }
           );
-
           const startTime = new Date(Date.parse(match.time));
           const endTime = new Date(
             startTime.getTime() + match.duration_mins * 60000
@@ -133,7 +115,7 @@ const TournamentSchedule = () => {
           setDayFieldMap(day, {});
           setDayFieldMap(day, match.field?.id, true);
 
-          days.add(day);
+          days.add(new Date(Date.parse(match.time)));
         }
       });
       setTournamentDays(Array.from(days));
@@ -267,7 +249,13 @@ const TournamentSchedule = () => {
                           class="text-sm md:text-base"
                           value={"day-tab-" + (i() + 1)}
                         >
-                          {day}
+                          {day.toLocaleDateString("en-US", {
+                            weekday: "long",
+                            year: "numeric",
+                            month: "long",
+                            day: "numeric",
+                            timeZone: "UTC"
+                          })}
                         </TabsTrigger>
                       )}
                     </For>
