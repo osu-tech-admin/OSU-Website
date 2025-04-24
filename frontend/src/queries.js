@@ -156,6 +156,10 @@ export const fetchMatch = async matchId => {
   return apiRequest(`/api/matches/${matchId}`, "GET");
 };
 
+export const fetchMatchStats = async matchId => {
+  return apiRequest(`/api/matches/${matchId}/stats`, "GET");
+};
+
 /**
  * Fetch all matches for a team in a tournament
  * @param {number} tournamentSlug - Tournament Slug

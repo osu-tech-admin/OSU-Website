@@ -1,8 +1,9 @@
 from datetime import datetime
 
+from django.db.models import QuerySet
 from ninja import ModelSchema, Schema
 
-from osu.match.models import Match, MatchScore, SpiritScore
+from osu.match.models import Match, MatchEvent, MatchScore, MatchStats, SpiritScore
 from osu.player.models import Player
 from osu.team.models import Team
 from osu.tournament.models import Tournament, TournamentField
@@ -16,6 +17,7 @@ class PlayerBasicSchema(ModelSchema):
 
     user_first_name: str
     user_last_name: str
+    user_full_name: str
 
     @staticmethod
     def resolve_user_first_name(obj: Player) -> str:
@@ -24,6 +26,10 @@ class PlayerBasicSchema(ModelSchema):
     @staticmethod
     def resolve_user_last_name(obj: Player) -> str:
         return obj.user.last_name
+
+    @staticmethod
+    def resolve_user_full_name(obj: Player) -> str:
+        return obj.user.get_full_name()
 
 
 class TeamBasicSchema(ModelSchema):
@@ -102,6 +108,43 @@ class MatchBasicSchema(ModelSchema):
     team_2: TeamBasicSchema
     tournament: TournamentBasicSchema
     field: TournamentFieldSchema | None = None
+
+
+# class MatchStatsMinSchema(ModelSchema):
+#     initial_possession: TeamBasicSchema
+#     current_possession: TeamBasicSchema
+
+#     class Config:
+#         model = MatchStats
+#         model_exclude = ["match", "tournament"]
+
+
+class MatchEventSchema(ModelSchema):
+    team: TeamBasicSchema | None
+    scored_by: PlayerBasicSchema | None
+    assisted_by: PlayerBasicSchema | None
+    drop_by: PlayerBasicSchema | None
+    throwaway_by: PlayerBasicSchema | None
+    block_by: PlayerBasicSchema | None
+
+    class Config:
+        model = MatchEvent
+        model_exclude = ["stats"]
+
+
+class MatchStatsSchema(ModelSchema):
+    initial_possession: TeamBasicSchema
+    current_possession: TeamBasicSchema
+
+    events: list[MatchEventSchema]
+
+    @staticmethod
+    def resolve_events(match_stats: MatchStats) -> QuerySet[MatchEvent]:
+        return MatchEvent.objects.filter(stats=match_stats).order_by("-time")
+
+    class Config:
+        model = MatchStats
+        model_exclude = ["match", "tournament"]
 
 
 class MatchDetailSchema(MatchBasicSchema):
