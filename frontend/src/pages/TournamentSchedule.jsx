@@ -115,10 +115,10 @@ const TournamentSchedule = () => {
           setDayFieldMap(day, {});
           setDayFieldMap(day, match.field?.id, true);
 
-          days.add(new Date(Date.parse(match.time)));
+          days.add(day);
         }
       });
-      setTournamentDays(Array.from(days));
+      setTournamentDays(Array.from(days).map(day => new Date(Date.parse(day +"Z"))));
       setDoneBuildingScheduleMap(true);
     }
   });
